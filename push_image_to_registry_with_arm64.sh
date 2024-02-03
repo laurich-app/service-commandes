@@ -6,7 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 TAG="$1"
-IMAGE_NAME="service-commande"
+IMAGE_NAME="service-commandes"
 
 git tag $TAG
 git push origin $TAG
