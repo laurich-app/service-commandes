@@ -9,5 +9,3 @@ docker compose up -d
 # Environnement
 
 URL_CONFIG_SERVER : http://localhost:8888
-
-test SHH
