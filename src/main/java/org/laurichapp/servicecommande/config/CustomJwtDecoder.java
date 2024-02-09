@@ -1,6 +1,6 @@
 package org.laurichapp.servicecommande.config;
 
-import com.example.servicecatalogue.properties.JwtProperties;
+import org.laurichapp.servicecommande.properties.JwtProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
