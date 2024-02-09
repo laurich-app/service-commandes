@@ -1,4 +1,4 @@
-package org.laurichapp.servicecommande.configurations;
+package org.laurichapp.servicecommande.properties;
 
 import jakarta.annotation.PostConstruct;
 import org.laurichapp.servicecommande.dtos.ConsulDTO;
