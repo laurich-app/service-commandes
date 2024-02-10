@@ -13,7 +13,7 @@ public class CommandesController {
     @GetMapping
     @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity get() {
-        // TO DO
+        // TODO
         return ResponseEntity.ok().build();
     }
 }
