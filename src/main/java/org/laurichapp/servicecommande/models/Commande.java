@@ -1,29 +1,38 @@
-package org.laurichapp.servicecommande.model;
+package org.laurichapp.servicecommande.models;
+
+import jakarta.persistence.*;
+import org.laurichapp.servicecommande.dtos.CommandeDTO;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "PRODUIT")
 public class Commande {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "_ID")
     private UUID _idCommande;
     Date date_creation;
     private String id_utillisateur, id_paiement;
     Double total;
+    @ManyToMany(mappedBy = "listCommandes")
     private List<Produit> produitList;
     private String etat_livraison, statut_paiement;
     private String numero;
 
-    public Commande(UUID _idCommande, Date date_creation, String id_utillisateur, String id_paiement, Double total, List<Produit> produitList, String etat_livraison, String statut_paiement, String numero) {
-        this._idCommande = _idCommande;
-        this.date_creation = date_creation;
-        this.id_utillisateur = id_utillisateur;
-        this.id_paiement = id_paiement;
-        this.total = total;
-        this.produitList = produitList;
-        this.etat_livraison = etat_livraison;
-        this.statut_paiement = statut_paiement;
-        this.numero = numero;
+    public static CommandeDTO toDTO(Commande commande) {
+        return new CommandeDTO(commande.get_idCommande(),
+                commande.getDate_creation(),
+                commande.getId_utillisateur(),
+                commande.getId_paiement(),
+                commande.getTotal(),
+                commande.getProduitList(),
+                commande.getEtat_livraison(),
+                commande.getStatut_paiement(),
+                commande.getNumero());
     }
 
     public UUID get_idCommande() {

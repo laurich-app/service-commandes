@@ -1,22 +1,31 @@
-package org.laurichapp.servicecommande.model;
+package org.laurichapp.servicecommande.models;
+
+import jakarta.persistence.*;
+import org.laurichapp.servicecommande.dtos.PanierDTO;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "PANIER")
 public class Panier {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "_ID")
     private UUID _idPanier;
 
     private Date date_creation;
-    private String TOKEN;
+    private String token;
+    @ManyToMany(mappedBy = "listPaniers")
     private List<Produit> listProduits;
 
-    public Panier(UUID _idPanier, Date date_creation, String TOKEN, List<Produit> listProduits) {
-        this._idPanier = _idPanier;
-        this.date_creation = date_creation;
-        this.TOKEN = TOKEN;
-        this.listProduits = listProduits;
+    public static PanierDTO toDTO(Panier panier) {
+        return new PanierDTO(panier.get_idPanier(),
+                panier.getDate_creation(),
+                panier.getToken(),
+                panier.getListProduits());
     }
 
     public UUID get_idPanier() {
@@ -35,12 +44,12 @@ public class Panier {
         this.date_creation = date_creation;
     }
 
-    public String getTOKEN() {
-        return TOKEN;
+    public String getToken() {
+        return token;
     }
 
-    public void setTOKEN(String TOKEN) {
-        this.TOKEN = TOKEN;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public List<Produit> getListProduits() {

@@ -1,8 +1,8 @@
-package org.laurichapp.servicecommande.facade;
+package org.laurichapp.servicecommande.facades;
 
-import org.laurichapp.servicecommande.model.Commande;
-import org.laurichapp.servicecommande.model.Panier;
-import org.laurichapp.servicecommande.model.Produit;
+import org.laurichapp.servicecommande.models.Commande;
+import org.laurichapp.servicecommande.models.Panier;
+import org.laurichapp.servicecommande.models.Produit;
 
 import java.util.UUID;
 

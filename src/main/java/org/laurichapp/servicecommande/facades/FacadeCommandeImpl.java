@@ -1,9 +1,11 @@
-package org.laurichapp.servicecommande.facade;
+package org.laurichapp.servicecommande.facades;
 
-import org.laurichapp.servicecommande.model.Commande;
+import org.laurichapp.servicecommande.models.Commande;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class FacadeCommandeImpl implements FacadeCommande {
     @Override
     public void createCommande() {
