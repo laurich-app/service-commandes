@@ -1,9 +1,9 @@
 package org.laurichapp.servicecommande.repositories;
 
 import org.laurichapp.servicecommande.models.Commande;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 @Repository
-public interface CommandeRepository extends JpaRepository<Commande, Long> {
+public interface CommandeRepository extends MongoRepository<Commande, Long> {
 }
