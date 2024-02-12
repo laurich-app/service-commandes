@@ -26,6 +26,13 @@ public interface FacadePanier {
      */
     Commande createCommandeFromPanier(String token);
 
+    /**
+     * Créer un panier en ajoutant un produit
+     * @param produit à ajouter
+     * @return
+     */
+    Panier createPanier(Produit produit);
+
     /*========== PUT ==========*/
 
     /**
@@ -34,6 +41,14 @@ public interface FacadePanier {
      * @param produit à ajouter
      */
     void addProduit(String token, Produit produit);
+
+    /**
+     * Met à jour un produit,
+     * Si il existe augmente la qte sinon le rajoute au panier
+     * @param token du panier
+     * @param produit à modifier
+     */
+    void updateProduit(String token, Produit produit);
 
     /*========== DELETE ==========*/
     /**

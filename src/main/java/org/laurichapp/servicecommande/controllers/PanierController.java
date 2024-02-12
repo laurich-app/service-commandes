@@ -9,27 +9,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/commandes")
-public class CommandesController {
+@RequestMapping("/paniers")
+public class PanierController {
 
-    private final FacadeCommande facadeCommande;
+    private final FacadePanier facadePanier;
 
-    public CommandesController(FacadeCommande facadeCommande) {
-        this.facadeCommande = facadeCommande;
+    public PanierController(FacadePanier facadePanier) {
+        this.facadePanier = facadePanier;
     }
     /*========== GET ==========*/
-    @GetMapping
-    @PreAuthorize("hasRole('GESTIONNAIRE')")
-    public ResponseEntity get() {
-        // TODO
-        return ResponseEntity.ok().build();
-    }
+
 
     /*========== POST ==========*/
 
     /*========== PUT ==========*/
 
     /*========== DELETE ==========*/
-
-
 }

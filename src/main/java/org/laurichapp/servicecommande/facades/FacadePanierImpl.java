@@ -10,6 +10,7 @@ import java.util.UUID;
 @Service
 public class FacadePanierImpl implements FacadePanier {
 
+
     @Override
     public Panier getPanier(String token) {
         // TODO
@@ -23,7 +24,18 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
+    public Panier createPanier(Produit produit) {
+        // TODO
+        return null;
+    }
+
+    @Override
     public void addProduit(String token, Produit produit) {
+        // TODO
+    }
+
+    @Override
+    public void updateProduit(String token, Produit produit) {
         // TODO
     }
 
