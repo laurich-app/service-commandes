@@ -1,5 +1,7 @@
 package org.laurichapp.servicecommande.facades;
 
+import org.laurichapp.servicecommande.dtos.PanierDTO;
+import org.laurichapp.servicecommande.dtos.ProduitDTO;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 import org.laurichapp.servicecommande.models.Produit;
@@ -28,10 +30,10 @@ public interface FacadePanier {
 
     /**
      * Créer un panier en ajoutant un produit
-     * @param produit à ajouter
+     * @param produitDTO le produit à ajouter
      * @return
      */
-    Panier createPanier(Produit produit);
+    Panier createPanier(ProduitDTO produitDTO);
 
     /*========== PUT ==========*/
 

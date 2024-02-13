@@ -1,14 +1,22 @@
 package org.laurichapp.servicecommande.facades;
 
+import org.laurichapp.servicecommande.dtos.ProduitDTO;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 import org.laurichapp.servicecommande.models.Produit;
+import org.laurichapp.servicecommande.repositories.PanierRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class FacadePanierImpl implements FacadePanier {
+
+    PanierRepository panierRepository;
+
+    public FacadePanierImpl(PanierRepository panierRepository) {
+        this.panierRepository = panierRepository;
+    }
 
 
     @Override
@@ -24,9 +32,13 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public Panier createPanier(Produit produit) {
-        // TODO
-        return null;
+    public Panier createPanier(ProduitDTO produitDTO) {
+        Panier panier = new Panier();
+        Produit p = Produit.fromDTO(produitDTO);
+        panier.addProduitListProduits(p);
+        panier.setToken(UUID.randomUUID().toString());
+        this.panierRepository.save(panier);
+        return panier;
     }
 
     @Override

@@ -22,7 +22,14 @@ Authorization: Bearer {{accessToken}}
 
 ###
 
-GET http://localhost:8080/paniers
+POST http://localhost:8080/paniers
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+{
+  "id_produit" : 1,
+  "couleur" : "rouge",
+  "quantite" : 1
+
+}
 

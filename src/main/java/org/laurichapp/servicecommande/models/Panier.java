@@ -6,9 +6,9 @@ import org.laurichapp.servicecommande.dtos.PanierDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Document(collection = "paniers")
 public class Panier {
@@ -16,10 +16,10 @@ public class Panier {
     @Id
     private ObjectId _idPanier;
 
-    private Date date_creation;
+    private Date date_creation = new Date(System.currentTimeMillis());
     private String token;
 
-    private List<Produit> listProduits;
+    private List<Produit> listProduits = new ArrayList<>();
 
     public static PanierDTO toDTO(Panier panier) {
         return new PanierDTO(panier.get_idPanier().toString(),
@@ -58,5 +58,9 @@ public class Panier {
 
     public void setListProduits(List<Produit> listProduits) {
         this.listProduits = listProduits;
+    }
+
+    public void addProduitListProduits(Produit produit) {
+        this.listProduits.add(produit);
     }
 }

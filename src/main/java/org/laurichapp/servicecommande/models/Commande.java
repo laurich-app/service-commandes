@@ -7,9 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-@Document
+@Document(collection = "commandes")
 public class Commande {
 
     @Id
@@ -37,6 +36,11 @@ public class Commande {
                 commande.getEtat_livraison(),
                 commande.getStatut_paiement(),
                 commande.getNumero());
+    }
+
+    public static Commande fromDTO(CommandeDTO commandeDTO) {
+        // TODO
+        return null;
     }
 
     public ObjectId get_idCommande() {
