@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Document
+@Document(collection = "paniers")
 public class Panier {
 
     @Id
