@@ -10,16 +10,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/paniers")
 public class PanierController {
 
+    private final PanierRepository panierRepository;
     private final FacadePanier facadePanier;
 
-    public PanierController(FacadePanier facadePanier) {
+    public PanierController(FacadePanier facadePanier, PanierRepository panierRepository) {
         this.facadePanier = facadePanier;
+        this.panierRepository = panierRepository;
     }
     /*========== GET ==========*/
+
+    @GetMapping
+    public void enter() {
+        Panier panier = new Panier();
+        panier.setToken(UUID.randomUUID().toString());
+        this.panierRepository.save(panier);
+    }
 
 
     /*========== POST ==========*/

@@ -20,3 +20,9 @@ GET http://localhost:8080/commandes
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
+###
+
+GET http://localhost:8080/paniers
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
