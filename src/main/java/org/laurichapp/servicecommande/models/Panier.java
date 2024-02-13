@@ -1,38 +1,38 @@
 package org.laurichapp.servicecommande.models;
 
-import jakarta.persistence.*;
+
+import org.bson.types.ObjectId;
 import org.laurichapp.servicecommande.dtos.PanierDTO;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "PANIER")
+@Document
 public class Panier {
 
     @Id
-    @GeneratedValue
-    @Column(name = "_ID")
-    private UUID _idPanier;
+    private ObjectId _idPanier;
 
     private Date date_creation;
     private String token;
-    @ManyToMany(mappedBy = "listPaniers")
+
     private List<Produit> listProduits;
 
     public static PanierDTO toDTO(Panier panier) {
-        return new PanierDTO(panier.get_idPanier(),
+        return new PanierDTO(panier.get_idPanier().toString(),
                 panier.getDate_creation(),
                 panier.getToken(),
                 panier.getListProduits());
     }
 
-    public UUID get_idPanier() {
+    public ObjectId get_idPanier() {
         return _idPanier;
     }
 
-    public void set_idPanier(UUID _idPanier) {
+    public void set_idPanier(ObjectId _idPanier) {
         this._idPanier = _idPanier;
     }
 

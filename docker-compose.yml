@@ -19,6 +19,23 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pswd
 
+  mongo-commande:
+    image: mongo:7.0.5
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=service-commande
+     # - MONGO_INITDB_ROOT_USERNAME=user
+     # - MONGO_INITDB_ROOT_PASSWORD=pswd
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo-commande
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo-commande:27017/service-commande
+
   service-utilisateur:
     image: ghcr.io/laurich-app/service-utilisateur:1.1.0
     ports:

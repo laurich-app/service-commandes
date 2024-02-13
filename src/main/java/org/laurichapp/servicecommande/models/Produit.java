@@ -1,30 +1,22 @@
 package org.laurichapp.servicecommande.models;
 
-import jakarta.persistence.*;
+
 import org.laurichapp.servicecommande.dtos.ProduitDTO;
 
-import java.util.List;
 
-@Entity
-@Table(name = "PRODUIT")
+
 public class Produit {
 
-    @Id
+
     private String id_produit;
     private Double prix_unitaire;
     private String sexe, taille, description;
     private int quantite;
 
-    @ManyToOne
     private Couleur couleur;
-    @ManyToOne
+
     private Categorie categorie;
 
-    @ManyToMany(mappedBy = "listProduits")
-    private List<Panier> listPaniers;
-
-    @ManyToMany(mappedBy = "produitList")
-    private List<Commande> listCommandes;
 
     public static ProduitDTO toDTO(Produit produit) {
         return new ProduitDTO(
@@ -103,19 +95,4 @@ public class Produit {
         this.categorie = categorie;
     }
 
-    public List<Panier> getListPaniers() {
-        return listPaniers;
-    }
-
-    public void setListPaniers(List<Panier> listPaniers) {
-        this.listPaniers = listPaniers;
-    }
-
-    public List<Commande> getListCommandes() {
-        return listCommandes;
-    }
-
-    public void setListCommandes(List<Commande> listCommandes) {
-        this.listCommandes = listCommandes;
-    }
 }

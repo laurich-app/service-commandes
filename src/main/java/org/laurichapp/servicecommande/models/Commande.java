@@ -1,30 +1,34 @@
 package org.laurichapp.servicecommande.models;
 
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
 import org.laurichapp.servicecommande.dtos.CommandeDTO;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "PRODUIT")
+@Document
 public class Commande {
 
     @Id
-    @GeneratedValue
-    @Column(name = "_ID")
-    private UUID _idCommande;
+    private ObjectId _idCommande;
+
     Date date_creation;
+
     private String id_utillisateur, id_paiement;
+
     Double total;
-    @ManyToMany(mappedBy = "listCommandes")
+
     private List<Produit> produitList;
+
     private String etat_livraison, statut_paiement;
+
     private String numero;
 
     public static CommandeDTO toDTO(Commande commande) {
-        return new CommandeDTO(commande.get_idCommande(),
+        return new CommandeDTO(commande.get_idCommande().toString(),
                 commande.getDate_creation(),
                 commande.getId_utillisateur(),
                 commande.getId_paiement(),
@@ -35,11 +39,11 @@ public class Commande {
                 commande.getNumero());
     }
 
-    public UUID get_idCommande() {
+    public ObjectId get_idCommande() {
         return _idCommande;
     }
 
-    public void set_idCommande(UUID _idCommande) {
+    public void set_idCommande(ObjectId _idCommande) {
         this._idCommande = _idCommande;
     }
 

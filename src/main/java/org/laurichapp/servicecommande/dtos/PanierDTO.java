@@ -7,5 +7,5 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public record PanierDTO(@NotNull UUID _idPanier, Date date_creation, String token, List<Produit> listProduits) {
+public record PanierDTO(String _idPanier, Date date_creation, String token, List<Produit> listProduits) {
 }
