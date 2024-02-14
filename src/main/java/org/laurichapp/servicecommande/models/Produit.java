@@ -10,24 +10,26 @@ public class Produit {
     private int id_produit;
     private int quantite;
     private String couleur;
+    private Double prix_unitaire;
 
-    public Produit(int id_produit, String couleur, int quantite) {
+    public Produit(int id_produit, String couleur, int quantite, Double prix_unitaire) {
         this.id_produit = id_produit;
         this.quantite = quantite;
         this.couleur = couleur;
+        this.prix_unitaire = prix_unitaire;
     }
 
     public static ProduitDTO toDTO(Produit produit) {
         return new ProduitDTO(
                 produit.getId_produit(),
                 produit.getCouleur(),
-                produit.getQuantite()
-
+                produit.getQuantite(),
+                produit.getPrix_unitaire()
         );
     }
 
     public static Produit fromDTO(ProduitDTO produitDTO) {
-        Produit p = new Produit(produitDTO.id_produit(), produitDTO.couleur(), produitDTO.quantite());
+        Produit p = new Produit(produitDTO.id_produit(), produitDTO.couleur(), produitDTO.quantite(), produitDTO.prix_unitaire());
         return p;
     }
 
@@ -55,4 +57,11 @@ public class Produit {
         this.couleur = couleur;
     }
 
+    public Double getPrix_unitaire() {
+        return prix_unitaire;
+    }
+
+    public void setPrix_unitaire(Double prix_unitaire) {
+        this.prix_unitaire = prix_unitaire;
+    }
 }

@@ -3,6 +3,7 @@ package org.laurichapp.servicecommande.models;
 
 import org.bson.types.ObjectId;
 import org.laurichapp.servicecommande.dtos.PanierDTO;
+import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -62,5 +63,14 @@ public class Panier {
 
     public void addProduitListProduits(Produit produit) {
         this.listProduits.add(produit);
+    }
+
+    public Produit getProduitById(int idProduit) throws ProduitPasDansPanierException {
+        for (Produit p : this.listProduits) {
+            if (p.getId_produit() == idProduit) {
+                return p;
+            }
+        }
+        throw new ProduitPasDansPanierException();
     }
 }

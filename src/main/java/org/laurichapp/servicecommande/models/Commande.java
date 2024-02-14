@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Document(collection = "commandes")
 public class Commande {
@@ -25,6 +26,20 @@ public class Commande {
     private String etat_livraison, statut_paiement;
 
     private String numero;
+
+    public Commande() {
+    }
+
+    public Commande(String id_utillisateur, String id_paiement, Double total, List<Produit> produitList, String etat_livraison, String statut_paiement) {
+        this.date_creation = new Date(System.currentTimeMillis());
+        this.id_utillisateur = id_utillisateur;
+        this.id_paiement = id_paiement;
+        this.total = total;
+        this.produitList = produitList;
+        this.etat_livraison = etat_livraison;
+        this.statut_paiement = statut_paiement;
+        this.numero = UUID.randomUUID().toString(); // TODO : à modifier ?
+    }
 
     public static CommandeDTO toDTO(Commande commande) {
         return new CommandeDTO(commande.get_idCommande().toString(),

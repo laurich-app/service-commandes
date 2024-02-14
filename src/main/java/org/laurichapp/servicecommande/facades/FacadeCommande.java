@@ -1,6 +1,7 @@
 package org.laurichapp.servicecommande.facades;
 
 import org.laurichapp.servicecommande.models.Commande;
+import org.laurichapp.servicecommande.models.Panier;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface FacadeCommande {
      * Créer une commande
      * TODO : à définir
      */
-    void createCommande();
+    void createCommande(Panier panier);
 
     /*========== GET ==========*/
     /**

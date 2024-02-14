@@ -2,6 +2,7 @@ package org.laurichapp.servicecommande.facades;
 
 import org.laurichapp.servicecommande.dtos.PanierDTO;
 import org.laurichapp.servicecommande.dtos.ProduitDTO;
+import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 import org.laurichapp.servicecommande.models.Produit;
@@ -26,7 +27,7 @@ public interface FacadePanier {
      * @param token du panier
      * @return la commande créé
      */
-    Commande createCommandeFromPanier(String token);
+    void createCommandeFromPanier(String token);
 
     /**
      * Créer un panier en ajoutant un produit
@@ -35,22 +36,26 @@ public interface FacadePanier {
      */
     Panier createPanier(ProduitDTO produitDTO);
 
-    /*========== PUT ==========*/
-
     /**
      * Ajouter un produit
      * @param token du panier
-     * @param produit à ajouter
+     * @param produitDTO à ajouter
      */
-    void addProduit(String token, Produit produit);
+    Panier addProduit(String token, ProduitDTO produitDTO);
+
+    /*========== PUT ==========*/
 
     /**
      * Met à jour un produit,
      * Si il existe augmente la qte sinon le rajoute au panier
      * @param token du panier
-     * @param produit à modifier
+     * @param idProduit du produit
+     * @param couleur du produit
+     * @param quantite du produit
+     * @return
+     * @throws ProduitPasDansPanierException
      */
-    void updateProduit(String token, Produit produit);
+    Panier updateProduit(String token, int idProduit, String couleur, int quantite, Double prix_unitaire) throws ProduitPasDansPanierException;
 
     /*========== DELETE ==========*/
     /**
@@ -64,5 +69,5 @@ public interface FacadePanier {
      * @param token du panier
      * @param idProduit du produit à supprimer
      */
-    void deleteProduitPanier(String token, UUID idProduit);
+    void deleteProduitPanier(String token, int idProduit) throws ProduitPasDansPanierException;
 }

@@ -20,7 +20,13 @@ GET http://localhost:8080/commandes
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-###
+### get panier
+
+GET http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### create panier
 
 POST http://localhost:8080/paniers
 Content-Type: application/json
@@ -29,7 +35,51 @@ Authorization: Bearer {{accessToken}}
 {
   "id_produit" : 1,
   "couleur" : "rouge",
-  "quantite" : 1
-
+  "quantite" : 1,
+  "prix_unitaire" : 20.00
 }
 
+### add produit panier
+
+POST http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "id_produit" : 2,
+  "couleur" : "bleu",
+  "quantite" : 5,
+  "prix_unitaire" : 20.00
+}
+
+### update produit panier
+
+PUT http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa/produits/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "couleur" : "jaune",
+  "quantite" : 2,
+  "prix_unitaire" : 35.00
+}
+
+### valider panier
+
+POST http://localhost:8080/paniers/256f3a0e-8e48-4e1f-a540-1fc32a1e2b01/valider_commande
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### delete produit panier
+
+DELETE http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa/produits/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### delete panier
+
+DELETE http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+###
