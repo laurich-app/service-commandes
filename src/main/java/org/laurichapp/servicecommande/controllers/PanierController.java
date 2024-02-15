@@ -38,10 +38,9 @@ public class PanierController {
     }
 
     @PostMapping("/{token}/valider_commande")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<String> createCommandeFromPanier(@PathVariable String token) {
+    public ResponseEntity<String> createCommandeFromPanier(@PathVariable(name = "token") String token, Principal principal) {
         try {
-            facadePanier.createCommandeFromPanier(token);
+            facadePanier.createCommandeFromPanier(token, principal.getName());
         }
         catch (Exception e) {
             return ResponseEntity.notFound().build(); // TODO
