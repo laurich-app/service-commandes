@@ -2,6 +2,7 @@ package org.laurichapp.servicecommande.facades;
 
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
 import org.laurichapp.servicecommande.enums.StatutsPaiment;
+import org.laurichapp.servicecommande.exceptions.EtatLivraisonInexistantException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 import org.laurichapp.servicecommande.models.Produit;
@@ -33,30 +34,39 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public List<Commande> getAllCommandesUtilisateur() {
+    public List<Commande> getAllCommandesUtilisateur(String id_utilisateur) {
+        return commandeRepository.findAllById_utillisateur(id_utilisateur);
+    }
+
+    @Override
+    public Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur) {
+        return commandeRepository.findCommandeBy_idCommandeAndId_utillisateur(Long.valueOf(idCommande), idUtilisateur);
+    }
+
+
+    @Override
+    public List<Commande> getAllCommandes() {
         return commandeRepository.findAll();
     }
 
     @Override
-    public Commande getCommandeUtilisateurById(String idCommande) {
+    public Commande getCommandeById(String idCommande) {
         Optional<Commande> c = commandeRepository.findById(Long.valueOf(idCommande));
         return c.get();
     }
 
     @Override
-    public List<Commande> getAllCommandes() {
-        // TODO
-        return null;
-    }
+    public Commande updateEtatLivraison(String idCommande, String etat) throws EtatLivraisonInexistantException {
+        EtatsLivraison etatsLivraison = EtatsLivraison.valueOf(etat);
 
-    @Override
-    public Commande getCommandeById(String idCommande) {
-        // TODO
-        return null;
-    }
+        if (etatsLivraison != null) {
+            Commande commande = getCommandeById(idCommande);
+            commande.setEtat_livraison(etat);
+            return commande;
+        }
+        else {
+            throw new EtatLivraisonInexistantException();
+        }
 
-    @Override
-    public void updateEtatLivraison() {
-        // TODO
     }
 }

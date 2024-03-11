@@ -1,5 +1,7 @@
 package org.laurichapp.servicecommande.facades;
 
+import org.laurichapp.servicecommande.enums.EtatsLivraison;
+import org.laurichapp.servicecommande.exceptions.EtatLivraisonInexistantException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 
@@ -18,14 +20,14 @@ public interface FacadeCommande {
      * Récupère la liste des commandes pagines pour l'utilisateur connecté.
      * @return Liste de commandes
      */
-    List<Commande> getAllCommandesUtilisateur();
+    List<Commande> getAllCommandesUtilisateur(String idUtilisateur);
 
     /**
      * Récupère une commande pour l'utilisateur connecté.
      * @param idCommande : id de la commande
      * @return une commande
      */
-    Commande getCommandeUtilisateurById(String idCommande);
+    Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur);
 
     /**
      * Récupère la liste des commandes pagines.
@@ -47,7 +49,7 @@ public interface FacadeCommande {
     /**
      * Met à jours l'état de livraison de la commande.
      */
-    void updateEtatLivraison();
+    Commande updateEtatLivraison(String idCommande, String etat) throws EtatLivraisonInexistantException;
 
     /*========== DELETE ==========*/
 
