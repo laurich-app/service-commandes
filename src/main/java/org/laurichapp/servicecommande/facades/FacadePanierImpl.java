@@ -30,7 +30,7 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public void createCommandeFromPanier(String token) {
+    public void createCommandeFromPanier(String token, String nomUtilisateur) {
         Panier panier = panierRepository.findByToken(token);
         facadeCommande.createCommande(panier);
         panierRepository.delete(panier);
@@ -59,15 +59,21 @@ public class FacadePanierImpl implements FacadePanier {
     public Panier updateProduit(String token, int idProduit, String couleur, int quantite, Double prix_unitaire) throws ProduitPasDansPanierException {
         if (quantite != 0) {
             Panier panier = panierRepository.findByToken(token);
-            Produit produit = panier.getProduitById(idProduit);
-            produit.setCouleur(couleur);
-            produit.setQuantite(quantite);
-            produit.setPrix_unitaire(prix_unitaire);
-            panierRepository.save(panier);
+            Produit produit = panier.getProduit(idProduit, couleur);
+            if (produit == null) {
+                panier.addProduitListProduits(new Produit(idProduit, couleur, quantite, prix_unitaire));
+                panierRepository.save(panier);
+            }
+            else {
+                produit.setCouleur(couleur);
+                produit.setQuantite(quantite);
+                produit.setPrix_unitaire(prix_unitaire);
+                panierRepository.save(panier);
+            }
             return panier;
         }
         else { // si la qte est == 0 alors on supprime le produit
-            this.deleteProduitPanier(token, idProduit);
+            this.deleteProduitPanier(token, idProduit, couleur);
             return panierRepository.findByToken(token);
         }
 
@@ -80,9 +86,9 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public void deleteProduitPanier(String token, int idProduit) throws ProduitPasDansPanierException {
+    public void deleteProduitPanier(String token, int idProduit, String couleur) throws ProduitPasDansPanierException {
         Panier panier = panierRepository.findByToken(token);
-        Produit produit = panier.getProduitById(idProduit);
+        Produit produit = panier.getProduit(idProduit, couleur);
         panier.getListProduits().remove(produit);
         panierRepository.save(panier);
     }

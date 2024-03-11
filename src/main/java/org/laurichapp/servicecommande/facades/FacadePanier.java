@@ -27,7 +27,7 @@ public interface FacadePanier {
      * @param token du panier
      * @return la commande créé
      */
-    void createCommandeFromPanier(String token);
+    void createCommandeFromPanier(String token, String nomUtilisateur);
 
     /**
      * Créer un panier en ajoutant un produit
@@ -69,5 +69,5 @@ public interface FacadePanier {
      * @param token du panier
      * @param idProduit du produit à supprimer
      */
-    void deleteProduitPanier(String token, int idProduit) throws ProduitPasDansPanierException;
+    void deleteProduitPanier(String token, int idProduit, String couleur) throws ProduitPasDansPanierException;
 }

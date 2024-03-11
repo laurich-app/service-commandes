@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -75,10 +76,10 @@ public class PanierController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/{token}/produits/{id}")
-    public ResponseEntity<Void> deleteProduitPanier(@PathVariable String token, @PathVariable String id) {
+    @DeleteMapping("/{token}/produits/{id}/couleurs/{couleur}")
+    public ResponseEntity<Void> deleteProduitPanier(@PathVariable String token, @PathVariable String id, @PathVariable String couleur) {
         try {
-            facadePanier.deleteProduitPanier(token, Integer.parseInt(id));
+            facadePanier.deleteProduitPanier(token, Integer.parseInt(id), couleur);
         } catch (ProduitPasDansPanierException e) {
             return ResponseEntity.notFound().build();
         }

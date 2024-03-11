@@ -65,9 +65,9 @@ public class Panier {
         this.listProduits.add(produit);
     }
 
-    public Produit getProduitById(int idProduit) throws ProduitPasDansPanierException {
+    public Produit getProduit(int idProduit, String couleur) throws ProduitPasDansPanierException {
         for (Produit p : this.listProduits) {
-            if (p.getId_produit() == idProduit) {
+            if (p.getId_produit() == idProduit && p.getCouleur().equals(couleur)) {
                 return p;
             }
         }
