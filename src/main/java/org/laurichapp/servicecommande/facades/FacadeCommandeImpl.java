@@ -20,14 +20,14 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public void createCommande(Panier panier) {
+    public void createCommande(Panier panier, String idUtilisateur) {
         //String name = (Principal principal) principal->getName();
         List<Produit> produitList = panier.getListProduits();
         Double sommePanier = 0.0;
         for (Produit p : produitList) {
             sommePanier+= p.getPrix_unitaire()*p.getQuantite();
         }
-        Commande commande = new Commande("123456", null, sommePanier, produitList, EtatsLivraison.EN_ATTENTE.label, StatutsPaiment.EN_ATTENTE.label);
+        Commande commande = new Commande(idUtilisateur, null, sommePanier, produitList, EtatsLivraison.EN_ATTENTE.label, StatutsPaiment.EN_ATTENTE.label);
         commandeRepository.insert(commande);
     }
 
