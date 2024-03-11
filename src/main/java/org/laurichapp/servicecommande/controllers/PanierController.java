@@ -33,6 +33,7 @@ public class PanierController {
     /*========== POST ==========*/
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Panier> createPanier(@RequestBody ProduitDTO produitDTO) {
         Panier panier =  facadePanier.createPanier(produitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(panier);

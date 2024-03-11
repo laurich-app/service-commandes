@@ -9,6 +9,7 @@ import org.laurichapp.servicecommande.repositories.CommandeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacadeCommandeImpl implements FacadeCommande {
@@ -33,14 +34,13 @@ public class FacadeCommandeImpl implements FacadeCommande {
 
     @Override
     public List<Commande> getAllCommandesUtilisateur() {
-        // TODO
-        return null;
+        return commandeRepository.findAll();
     }
 
     @Override
     public Commande getCommandeUtilisateurById(String idCommande) {
-        // TODO
-        return null;
+        Optional<Commande> c = commandeRepository.findById(Long.valueOf(idCommande));
+        return c.get();
     }
 
     @Override
