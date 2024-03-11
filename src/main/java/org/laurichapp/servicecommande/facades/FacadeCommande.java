@@ -9,9 +9,9 @@ public interface FacadeCommande {
 
     /**
      * Créer une commande
-     * TODO : à définir
+     * Créer une commande à partir d'un panier
      */
-    void createCommande(Panier panier);
+    void createCommande(Panier panier, String idUtilisateur);
 
     /*========== GET ==========*/
     /**

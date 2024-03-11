@@ -30,9 +30,9 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public void createCommandeFromPanier(String token, String nomUtilisateur) {
+    public void createCommandeFromPanier(String token, String idUtilisateur) {
         Panier panier = panierRepository.findByToken(token);
-        facadeCommande.createCommande(panier);
+        facadeCommande.createCommande(panier, idUtilisateur);
         panierRepository.delete(panier);
     }
 
