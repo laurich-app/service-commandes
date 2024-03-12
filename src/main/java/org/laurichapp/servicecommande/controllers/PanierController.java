@@ -45,7 +45,7 @@ public class PanierController {
             facadePanier.createCommandeFromPanier(token, principal.getName());
         }
         catch (Exception e) {
-            return ResponseEntity.notFound().build(); // TODO
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Commande prise en compte");
     }

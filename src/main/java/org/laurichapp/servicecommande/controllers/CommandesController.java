@@ -21,6 +21,7 @@ public class CommandesController {
     public CommandesController(FacadeCommande facadeCommande) {
         this.facadeCommande = facadeCommande;
     }
+
     /*========== GET ==========*/
     @GetMapping
     @PreAuthorize("hasRole('USER')")

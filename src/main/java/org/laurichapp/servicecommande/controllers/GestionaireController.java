@@ -22,15 +22,15 @@ public class GestionaireController {
     }
     /*========== GET ==========*/
 
-    @GetMapping("commandes")
-    @PreAuthorize("GESTIONNAIRE")
+    @GetMapping("/commandes")
+    @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity<List<Commande>> getAllComandes() {
         List<Commande> commandes = facadeCommande.getAllCommandes();
         return ResponseEntity.ok(commandes);
     }
 
-    @GetMapping("commandes/{id}")
-    @PreAuthorize("GESTIONNAIRE")
+    @GetMapping("/commandes/{id}")
+    @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity<Commande> getComandesById(@PathVariable String idCommande) {
         Commande commande = facadeCommande.getCommandeById(idCommande);
         return ResponseEntity.ok(commande);
@@ -40,15 +40,14 @@ public class GestionaireController {
 
     /*========== PUT ==========*/
 
-    @GetMapping("/commandes/{id}/livraison")
-    @PreAuthorize("GESTIONNAIRE")
-    public ResponseEntity updateCommande(@PathVariable String idCommande,  @RequestBody Map map) {
-
+    @PostMapping("/commandes/{id}/livraison")
+    @PreAuthorize("hasRole('GESTIONNAIRE')")
+    public ResponseEntity<Commande> updateCommande(@PathVariable String idCommande, @RequestBody Map map) {
         Commande commande = null;
         try {
             commande = facadeCommande.updateEtatLivraison(idCommande, map.get("etat_livraison").toString());
         } catch (EtatLivraisonInexistantException e) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Etat de livraison inexistant");
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).build();
         }
         return ResponseEntity.ok(commande);
     }

@@ -14,12 +14,6 @@ Content-Type: application/json
     }
 %}
 
-####
-
-GET http://localhost:8080/commandes
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
 ### get panier
 
 GET http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
@@ -82,4 +76,26 @@ DELETE http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-###
+### get All Commandes
+
+GET http://localhost:8080/gestionnaires/commandes
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### get Commandes By ID
+
+GET http://localhost:8080/gestionnaires/commandes/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### get All Commandes Utilisateur
+
+GET http://localhost:8080/commandes
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+### get Commande Utilisateur by ID
+
+GET http://localhost:8080/commandes/1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
