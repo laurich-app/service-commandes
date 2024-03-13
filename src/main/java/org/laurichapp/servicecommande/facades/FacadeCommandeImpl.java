@@ -92,6 +92,7 @@ public class FacadeCommandeImpl implements FacadeCommande {
     public Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
         Commande commande = getCommandeById(idCommande);
         commande.setEtat_livraison(etat);
+        this.commandeRepository.save(commande);
         // DECLENCHE PROCESS ESB
         return commande;
     }
