@@ -1,6 +1,10 @@
 package org.laurichapp.servicecommande.controllers;
 
-import org.laurichapp.servicecommande.dtos.ProduitDTO;
+import jakarta.validation.Valid;
+import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
+import org.laurichapp.servicecommande.dtos.in.UpdateProduitDTO;
+import org.laurichapp.servicecommande.dtos.out.PanierDTO;
+import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.laurichapp.servicecommande.facades.FacadePanier;
 import org.laurichapp.servicecommande.models.Panier;
@@ -10,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/paniers")
@@ -25,63 +28,75 @@ public class PanierController {
     /*========== GET ==========*/
 
     @GetMapping("/{token}")
-    public ResponseEntity<Panier> getPanier(@PathVariable String token) {
-        Panier panier = facadePanier.getPanier(token);
-        return ResponseEntity.ok(panier);
+    public ResponseEntity<PanierDTO> getPanier(@PathVariable String token) {
+        try {
+            Panier panier = facadePanier.getPanier(token);
+            return ResponseEntity.ok(Panier.toDTO(panier));
+        } catch (PanierNotFoundException p) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /*========== POST ==========*/
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Panier> createPanier(@RequestBody ProduitDTO produitDTO) {
-        Panier panier =  facadePanier.createPanier(produitDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(panier);
+    public ResponseEntity<PanierDTO> createPanier(@Valid @RequestBody AjouterProduitDTO ajouterProduitDTO) {
+        Panier panier =  facadePanier.createPanier(ajouterProduitDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Panier.toDTO(panier));
     }
 
     @PostMapping("/{token}/valider_commande")
     public ResponseEntity<String> createCommandeFromPanier(@PathVariable(name = "token") String token, Principal principal) {
         try {
             facadePanier.createCommandeFromPanier(token, principal.getName());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Commande prise en compte");
         }
-        catch (Exception e) {
+        catch (PanierNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body("Commande prise en compte");
     }
 
     @PostMapping("/{token}")
-    public ResponseEntity<Panier> addProduit(@PathVariable String token, @RequestBody ProduitDTO produitDTO) {
-        Panier panier = facadePanier.addProduit(token, produitDTO);
-        return ResponseEntity.ok(panier);
+    public ResponseEntity<PanierDTO> addProduit(@PathVariable String token, @Valid @RequestBody AjouterProduitDTO ajouterProduitDTO) {
+        try {
+            Panier panier = facadePanier.addProduit(token, ajouterProduitDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Panier.toDTO(panier));
+        } catch (PanierNotFoundException p) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /*========== PUT ==========*/
 
     @PutMapping("/{token}/produits/{id}")
-    public ResponseEntity<Panier> updateProduit(@PathVariable String token, @PathVariable String id, @RequestBody Map map) {
+    public ResponseEntity<PanierDTO> updateProduit(@PathVariable String token, @PathVariable String id, @Valid @RequestBody UpdateProduitDTO updateProduitDTO) {
         Panier panier = null;
         try {
-            panier = facadePanier.updateProduit(token, Integer.parseInt(id), map.get("couleur").toString(), (Integer) map.get("quantite"), (Double) map.get("prix_unitaire"));
-        } catch (ProduitPasDansPanierException e) {
+            panier = facadePanier.updateProduit(token, Integer.parseInt(id), updateProduitDTO);
+        } catch (ProduitPasDansPanierException | PanierNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(panier);
+        return ResponseEntity.ok(Panier.toDTO(panier));
     }
 
     /*========== DELETE ==========*/
 
     @DeleteMapping("/{token}")
     public ResponseEntity<Void> deletePanier(@PathVariable String token) {
-        facadePanier.deletePanier(token);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        try {
+            facadePanier.deletePanier(token);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (PanierNotFoundException p) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{token}/produits/{id}/couleurs/{couleur}")
     public ResponseEntity<Void> deleteProduitPanier(@PathVariable String token, @PathVariable String id, @PathVariable String couleur) {
         try {
             facadePanier.deleteProduitPanier(token, Integer.parseInt(id), couleur);
-        } catch (ProduitPasDansPanierException e) {
+        } catch (ProduitPasDansPanierException | PanierNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

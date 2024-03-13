@@ -1,7 +1,10 @@
 package org.laurichapp.servicecommande.facades;
 
+import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
+import org.laurichapp.servicecommande.dtos.pagination.Paginate;
+import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
-import org.laurichapp.servicecommande.exceptions.EtatLivraisonInexistantException;
+import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 
@@ -20,27 +23,27 @@ public interface FacadeCommande {
      * Récupère la liste des commandes pagines pour l'utilisateur connecté.
      * @return Liste de commandes
      */
-    List<Commande> getAllCommandesUtilisateur(String idUtilisateur);
+    Paginate<CommandeDTO> getAllCommandesUtilisateur(String idUtilisateur, PaginateRequestDTO paginateRequestDTO);
 
     /**
      * Récupère une commande pour l'utilisateur connecté.
      * @param idCommande : id de la commande
      * @return une commande
      */
-    Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur);
+    Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException;
 
     /**
      * Récupère la liste des commandes pagines.
      * @return Liste de toutes les commandes
      */
-    List<Commande> getAllCommandes();
+    Paginate<CommandeDTO> getAllCommandes(PaginateRequestDTO paginateRequestDTO);
 
     /**
      * Récupère une commande.
      * @param idCommande : id de la commande
      * @return une commande
      */
-    Commande getCommandeById(String idCommande);
+    Commande getCommandeById(String idCommande) throws CommandeNotFoundException;
 
     /*========== POST ==========*/
 
@@ -49,7 +52,7 @@ public interface FacadeCommande {
     /**
      * Met à jours l'état de livraison de la commande.
      */
-    Commande updateEtatLivraison(String idCommande, String etat) throws EtatLivraisonInexistantException;
+    Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
 
     /*========== DELETE ==========*/
 

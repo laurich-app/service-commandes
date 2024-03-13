@@ -14,65 +14,136 @@ Content-Type: application/json
     }
 %}
 
+### create panier
+
+POST http://localhost:8080/paniers
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+{
+  "id" : 1,
+  "couleur_choisi" : "rouge",
+  "quantite" : 1
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+    if(response.status === 201) {
+        client.global.set("token", response.body.token);
+    }
+%}
+
 ### get panier
 
-GET http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
+GET http://localhost:8080/paniers/{{token}}
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
+# Authorization: Bearer {{accessToken}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### add produit panier
+
+POST http://localhost:8080/paniers/{{token}}
+Content-Type: application/json
+
+{
+  "id" :2,
+  "couleur_choisi" : "bleu",
+  "quantite" : 5
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+%}
+
+### update produit panier
+
+PUT http://localhost:8080/paniers/{{token}}/produits/2
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+{
+  "couleur_choisi" : "bleu",
+  "quantite" : 2
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+### produit inconnue
+
+PUT http://localhost:8080/paniers/{{token}}/produits/2
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+{
+  "couleur_choisi" : "jaune",
+  "quantite" : 2
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404");
+    });
+%}
+
+### Supprimer un produit
+DELETE http://localhost:8080/paniers/{{token}}/produits/2/couleurs/bleu
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+%}
+
+### Supprimer un panier
+DELETE http://localhost:8080/paniers/{{token}}
+Content-Type: application/json
+# Authorization: Bearer {{accessToken}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204");
+    });
+%}
 
 ### create panier
 
 POST http://localhost:8080/paniers
 Content-Type: application/json
-Authorization: Bearer {{accessToken}}
+# Authorization: Bearer {{accessToken}}
 
 {
-  "id_produit" : 1,
-  "couleur" : "rouge",
-  "quantite" : 1,
-  "prix_unitaire" : 20.00
+  "id" : 1,
+  "couleur_choisi" : "rouge",
+  "quantite" : 1
 }
 
-### add produit panier
-
-POST http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-  "id_produit" : 2,
-  "couleur" : "bleu",
-  "quantite" : 5,
-  "prix_unitaire" : 20.00
-}
-
-### update produit panier
-
-PUT http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa/produits/1
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-  "couleur" : "jaune",
-  "quantite" : 2,
-  "prix_unitaire" : 35.00
-}
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+    if(response.status === 201) {
+        client.global.set("token", response.body.token);
+    }
+%}
 
 ### valider panier
 
-POST http://localhost:8080/paniers/256f3a0e-8e48-4e1f-a540-1fc32a1e2b01/valider_commande
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-### delete produit panier
-
-DELETE http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa/produits/1
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-### delete panier
-
-DELETE http://localhost:8080/paniers/1cc8f2ec-653c-4d02-a050-8e96495d18aa
+POST http://localhost:8080/paniers/{{token}}/valider_commande
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -81,6 +152,16 @@ Authorization: Bearer {{accessToken}}
 GET http://localhost:8080/gestionnaires/commandes
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+### modifier l'état d'une commande (à la main seulement)
+
+#PUT http://localhost:8080/gestionnaires/commandes/../livraison
+#Content-Type: application/json
+#Authorization: Bearer {{accessToken}}
+#
+#{
+#  "etat_livraison": "EN_COURS"
+#}
 
 ### get Commandes By ID
 
@@ -96,6 +177,6 @@ Authorization: Bearer {{accessToken}}
 
 ### get Commande Utilisateur by ID
 
-GET http://localhost:8080/commandes/1
+GET http://localhost:8080/commandes/65f1d43ee9a1f71e5e660593
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}

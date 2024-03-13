@@ -1,13 +1,17 @@
 package org.laurichapp.servicecommande.models;
 
 import org.bson.types.ObjectId;
-import org.laurichapp.servicecommande.dtos.CommandeDTO;
+import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
+import org.laurichapp.servicecommande.enums.EtatsLivraison;
+import org.laurichapp.servicecommande.enums.StatutsPaiment;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.laurichapp.servicecommande.models.commandes.Produit;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Document(collection = "commandes")
 public class Commande {
@@ -15,30 +19,21 @@ public class Commande {
     @Id
     private ObjectId _idCommande;
 
-    Date date_creation;
+    private Date date_creation;
 
     private String id_utillisateur, id_paiement;
 
-    Double total;
+    private Double total;
 
-    private List<Produit> produitList;
+    private List<Produit> produits;
 
-    private String etat_livraison, statut_paiement;
+    private EtatsLivraison etat_livraison;
+    private StatutsPaiment statut_paiement;
 
     private String numero;
 
     public Commande() {
-    }
-
-    public Commande(String id_utillisateur, String id_paiement, Double total, List<Produit> produitList, String etat_livraison, String statut_paiement) {
-        this.date_creation = new Date(System.currentTimeMillis());
-        this.id_utillisateur = id_utillisateur;
-        this.id_paiement = id_paiement;
-        this.total = total;
-        this.produitList = produitList;
-        this.etat_livraison = etat_livraison;
-        this.statut_paiement = statut_paiement;
-        this.numero = UUID.randomUUID().toString(); // TODO : à modifier ?
+        this.produits = new ArrayList<>();
     }
 
     public static CommandeDTO toDTO(Commande commande) {
@@ -47,15 +42,10 @@ public class Commande {
                 commande.getId_utillisateur(),
                 commande.getId_paiement(),
                 commande.getTotal(),
-                commande.getProduitList(),
-                commande.getEtat_livraison(),
-                commande.getStatut_paiement(),
+                commande.getProduits().stream().map(Produit::toProduitDTO).collect(Collectors.toList()),
+                commande.getEtat_livraison().toString(),
+                commande.getStatut_paiement().toString(),
                 commande.getNumero());
-    }
-
-    public static Commande fromDTO(CommandeDTO commandeDTO) {
-        // TODO
-        return null;
     }
 
     public ObjectId get_idCommande() {
@@ -98,27 +88,27 @@ public class Commande {
         this.total = total;
     }
 
-    public List<Produit> getProduitList() {
-        return produitList;
+    public List<Produit> getProduits() {
+        return produits;
     }
 
-    public void setProduitList(List<Produit> produitList) {
-        this.produitList = produitList;
+    public void setProduits(List<Produit> produits) {
+        this.produits = produits;
     }
 
-    public String getEtat_livraison() {
+    public EtatsLivraison getEtat_livraison() {
         return etat_livraison;
     }
 
-    public void setEtat_livraison(String etat_livraison) {
+    public void setEtat_livraison(EtatsLivraison etat_livraison) {
         this.etat_livraison = etat_livraison;
     }
 
-    public String getStatut_paiement() {
+    public StatutsPaiment getStatut_paiement() {
         return statut_paiement;
     }
 
-    public void setStatut_paiement(String statut_paiement) {
+    public void setStatut_paiement(StatutsPaiment statut_paiement) {
         this.statut_paiement = statut_paiement;
     }
 

@@ -1,40 +1,65 @@
 package org.laurichapp.servicecommande.controllers;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
+import org.laurichapp.servicecommande.dtos.pagination.Paginate;
+import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
+import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.facades.FacadeCommande;
 import org.laurichapp.servicecommande.models.Commande;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/commandes")
 public class CommandesController {
 
     private final FacadeCommande facadeCommande;
+    private final Validator validator;
 
-    public CommandesController(FacadeCommande facadeCommande) {
+    public CommandesController(FacadeCommande facadeCommande, @Autowired Validator validator) {
         this.facadeCommande = facadeCommande;
+        this.validator = validator;
     }
 
     /*========== GET ==========*/
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<Commande>> getAllCommandes(Principal principal) {
-        List<Commande> commandes = facadeCommande.getAllCommandesUtilisateur(principal.getName());
+    public ResponseEntity<Paginate<CommandeDTO>> getAllCommandes(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "limit", defaultValue = "10", required = false) int limit,
+            @RequestParam(name = "sort", required = false) String sort,
+            @RequestParam(name = "sortDirection", required = false) Sort.Direction sortDirection,
+            Principal principal) {
+
+        PaginateRequestDTO paginateRequest = new PaginateRequestDTO(page, limit, sort, sortDirection);
+
+        Set<ConstraintViolation<PaginateRequestDTO>> violations = this.validator.validate(paginateRequest);
+        if(!violations.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Paginate<CommandeDTO> commandes = facadeCommande.getAllCommandesUtilisateur(principal.getName(), paginateRequest);
         return ResponseEntity.ok(commandes);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Commande> getCommande(@PathVariable String idCommande, Principal principal) {
-        Commande commandes = facadeCommande.getCommandeUtilisateurById(idCommande, principal.getName());
-        return ResponseEntity.ok(commandes);
+    public ResponseEntity<CommandeDTO> getCommande(@PathVariable String id, Principal principal) {
+        try {
+            Commande commandes = facadeCommande.getCommandeUtilisateurById(id, principal.getName());
+            return ResponseEntity.ok(Commande.toDTO(commandes));
+        } catch (CommandeNotFoundException c) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /*========== POST ==========*/

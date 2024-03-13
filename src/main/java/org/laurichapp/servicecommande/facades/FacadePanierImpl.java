@@ -1,10 +1,12 @@
 package org.laurichapp.servicecommande.facades;
 
-import org.laurichapp.servicecommande.dtos.ProduitDTO;
+import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
+import org.laurichapp.servicecommande.dtos.in.UpdateProduitDTO;
+import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
-import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
-import org.laurichapp.servicecommande.models.Produit;
+import org.laurichapp.servicecommande.models.paniers.Couleur;
+import org.laurichapp.servicecommande.models.paniers.Produit;
 import org.laurichapp.servicecommande.repositories.PanierRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,72 +26,82 @@ public class FacadePanierImpl implements FacadePanier {
 
 
     @Override
-    public Panier getPanier(String token) {
+    public Panier getPanier(String token) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
         return panier;
     }
 
     @Override
-    public void createCommandeFromPanier(String token, String idUtilisateur) {
+    public void createCommandeFromPanier(String token, String idUtilisateur) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
         facadeCommande.createCommande(panier, idUtilisateur);
         panierRepository.delete(panier);
     }
 
     @Override
-    public Panier createPanier(ProduitDTO produitDTO) {
+    public Panier createPanier(AjouterProduitDTO produitDTO) {
         Panier panier = new Panier();
         Produit produit = Produit.fromDTO(produitDTO);
-        panier.addProduitListProduits(produit);
+        panier.getProduits().add(produit);
         panier.setToken(UUID.randomUUID().toString());
         this.panierRepository.insert(panier);
         return panier;
     }
 
     @Override
-    public Panier addProduit(String token, ProduitDTO produitDTO) {
+    public Panier addProduit(String token, AjouterProduitDTO produitDTO) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
         Produit produit = Produit.fromDTO(produitDTO);
-        panier.addProduitListProduits(produit);
+        panier.getProduits().add(produit);
         panierRepository.save(panier);
         return panier;
     }
 
     @Override
-    public Panier updateProduit(String token, int idProduit, String couleur, int quantite, Double prix_unitaire) throws ProduitPasDansPanierException {
-        if (quantite != 0) {
-            Panier panier = panierRepository.findByToken(token);
-            Produit produit = panier.getProduit(idProduit, couleur);
+    public Panier updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException {
+        Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
+
+        if (updateProduitDTO.quantite() != 0) {
+            Produit produit = panier.getProduit(idProduit, updateProduitDTO.couleur_choisi());
             if (produit == null) {
-                panier.addProduitListProduits(new Produit(idProduit, couleur, quantite, prix_unitaire));
-                panierRepository.save(panier);
+                throw new ProduitPasDansPanierException();
             }
             else {
-                produit.setCouleur(couleur);
-                produit.setQuantite(quantite);
-                produit.setPrix_unitaire(prix_unitaire);
+                produit.setQuantite(updateProduitDTO.quantite());
                 panierRepository.save(panier);
             }
             return panier;
         }
         else { // si la qte est == 0 alors on supprime le produit
-            this.deleteProduitPanier(token, idProduit, couleur);
+            this.deleteProduitPanier(token, idProduit, updateProduitDTO.couleur_choisi());
             return panierRepository.findByToken(token);
         }
 
     }
 
     @Override
-    public void deletePanier(String token) {
+    public void deletePanier(String token) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
         panierRepository.delete(panier);
     }
 
     @Override
-    public void deleteProduitPanier(String token, int idProduit, String couleur) throws ProduitPasDansPanierException {
+    public void deleteProduitPanier(String token, int idProduit, String couleur) throws ProduitPasDansPanierException, PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
+        if(panier == null)
+            throw new PanierNotFoundException();
         Produit produit = panier.getProduit(idProduit, couleur);
-        panier.getListProduits().remove(produit);
+        panier.getProduits().remove(produit);
         panierRepository.save(panier);
     }
 }
