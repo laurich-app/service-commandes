@@ -47,10 +47,10 @@ public class PanierController {
     }
 
     @PostMapping("/{token}/valider_commande")
-    public ResponseEntity<String> createCommandeFromPanier(@PathVariable(name = "token") String token, Principal principal) {
+    public ResponseEntity<Void> createCommandeFromPanier(@PathVariable(name = "token") String token, Principal principal) {
         try {
             facadePanier.createCommandeFromPanier(token, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body("Commande prise en compte");
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         catch (PanierNotFoundException e) {
             return ResponseEntity.notFound().build();
