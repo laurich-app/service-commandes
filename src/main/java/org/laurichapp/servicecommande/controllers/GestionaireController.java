@@ -55,10 +55,10 @@ public class GestionaireController {
 
     @GetMapping("/commandes/{id}")
     @PreAuthorize("hasRole('GESTIONNAIRE')")
-    public ResponseEntity<Commande> getComandesById(@PathVariable String id) {
+    public ResponseEntity<CommandeDTO> getComandesById(@PathVariable String id) {
         try {
             Commande commande = facadeCommande.getCommandeById(id);
-            return ResponseEntity.ok(commande);
+            return ResponseEntity.ok(Commande.toDTO(commande));
         } catch (CommandeNotFoundException c){
             return ResponseEntity.notFound().build();
         }
@@ -68,16 +68,16 @@ public class GestionaireController {
 
     /*========== PUT ==========*/
 
-    @PostMapping("/commandes/{id}/livraison")
+    @PutMapping("/commandes/{id}/livraison")
     @PreAuthorize("hasRole('GESTIONNAIRE')")
-    public ResponseEntity<Commande> updateCommande(@PathVariable String id, @Valid @RequestBody LivraisonCommandeDTO livraisonCommandeDTO) {
+    public ResponseEntity<CommandeDTO> updateCommande(@PathVariable String id, @Valid @RequestBody LivraisonCommandeDTO livraisonCommandeDTO) {
         Commande commande = null;
         try {
             commande = facadeCommande.updateEtatLivraison(id, livraisonCommandeDTO.etat_livraison());
         } catch (CommandeNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(commande);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Commande.toDTO(commande));
     }
 
     /*========== DELETE ==========*/

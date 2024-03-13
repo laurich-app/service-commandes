@@ -155,13 +155,13 @@ Authorization: Bearer {{accessToken}}
 
 ### modifier l'état d'une commande (à la main seulement)
 
-#PUT http://localhost:8080/gestionnaires/commandes/../livraison
-#Content-Type: application/json
-#Authorization: Bearer {{accessToken}}
-#
-#{
-#  "etat_livraison": "EN_COURS"
-#}
+PUT http://localhost:8080/gestionnaires/commandes/65f210e0d838327403638d40/livraison
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "etat_livraison": "LIVRE"
+}
 
 ### get Commandes By ID
 
