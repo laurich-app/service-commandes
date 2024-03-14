@@ -5,6 +5,7 @@ import org.laurichapp.servicecommande.dtos.pagination.Paginate;
 import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
 import org.laurichapp.servicecommande.dtos.pagination.Pagination;
 import org.laurichapp.servicecommande.dtos.rabbits.GenererCommandeDTO;
+import org.laurichapp.servicecommande.dtos.rabbits.NotificationCommandeDTO;
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
 import org.laurichapp.servicecommande.enums.StatutsPaiment;
 import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
@@ -44,12 +45,13 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public void createCommande(Panier panier, String idUtilisateur) {
+    public void createCommande(Panier panier, String idUtilisateur, String email) {
 
         Commande commande = new Commande();
         commande.setId_utillisateur(idUtilisateur);
         commande.setStatut_paiement(StatutsPaiment.EN_ATTENTE);
         commande.setEtat_livraison(EtatsLivraison.EN_ATTENTE);
+        commande.setEmail(email);
 
         // On récupère l'ID pour traitement dans l'ESB
         Commande commandeInserer = commandeRepository.insert(commande);
@@ -119,6 +121,12 @@ public class FacadeCommandeImpl implements FacadeCommande {
         );
         commande.setTotal(calculTotal(commande.getProduits()));
         commande.setStatut_paiement(StatutsPaiment.ACCEPTE);
-        commandeRepository.save(commande);
+        Commande c = commandeRepository.save(commande);
+        this.serviceRabbitMQSender.notifierCommande(
+                new NotificationCommandeDTO(
+                        c.getEmail(),
+                        Commande.toDTO(c)
+                )
+        );
     }
 }

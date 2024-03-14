@@ -37,11 +37,11 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public void createCommandeFromPanier(String token, String idUtilisateur) throws PanierNotFoundException {
+    public void createCommandeFromPanier(String token, String idUtilisateur, String email) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
         if(panier == null)
             throw new PanierNotFoundException();
-        facadeCommande.createCommande(panier, idUtilisateur);
+        facadeCommande.createCommande(panier, idUtilisateur, email);
         panierRepository.delete(panier);
     }
 

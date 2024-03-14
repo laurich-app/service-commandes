@@ -1,5 +1,6 @@
 package org.laurichapp.servicecommande.services;
 
+import org.laurichapp.servicecommande.dtos.rabbits.NotificationCommandeDTO;
 import org.laurichapp.servicecommande.dtos.rabbits.ValiderCommandeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,12 @@ public class ServiceRabbitMQSender {
     @Value("${spring.rabbitmq.routingkey.commande.valider.commande}")
     private String routingkeyCommandeValiderCommande;
 
+    @Value("${spring.rabbitmq.exchange.catalogue.generer.commande.notification}")
+    private String exchangeCommandeNotification;
+
+    @Value("${spring.rabbitmq.routingkey.catalogue.generer.commande.notification}")
+    private String routingkeyCommandeNotification;
+
     private final RabbitTemplate rabbitTemplate;
     private static final Logger logger = LoggerFactory.getLogger(ServiceRabbitMQSender.class);
 
@@ -27,5 +34,10 @@ public class ServiceRabbitMQSender {
     public void validerCommande(ValiderCommandeDTO validerCommandeDTO){
         logger.info("Valider commande : " + validerCommandeDTO);
         rabbitTemplate.convertAndSend(exchangeCommandeValiderCommande,routingkeyCommandeValiderCommande, validerCommandeDTO);
+    }
+
+    public void notifierCommande(NotificationCommandeDTO n) {
+        logger.info("Notifier l'utilisateur : " + n);
+        rabbitTemplate.convertAndSend(exchangeCommandeNotification,routingkeyCommandeNotification, n);
     }
 }

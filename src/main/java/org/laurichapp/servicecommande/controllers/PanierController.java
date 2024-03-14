@@ -11,18 +11,23 @@ import org.laurichapp.servicecommande.models.Panier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/paniers")
 public class PanierController {
 
     private final FacadePanier facadePanier;
+    private final JwtDecoder jwtDecoder;
 
-    public PanierController(FacadePanier facadePanier) {
+    public PanierController(FacadePanier facadePanier, JwtDecoder jwtDecoder) {
         this.facadePanier = facadePanier;
+        this.jwtDecoder = jwtDecoder;
     }
 
     /*========== GET ==========*/
@@ -47,9 +52,11 @@ public class PanierController {
     }
 
     @PostMapping("/{token}/valider_commande")
-    public ResponseEntity<Void> createCommandeFromPanier(@PathVariable(name = "token") String token, Principal principal) {
+    public ResponseEntity<Void> createCommandeFromPanier(@RequestHeader("Authorization") String bearer, @PathVariable(name = "token") String token, Principal principal) {
         try {
-            facadePanier.createCommandeFromPanier(token, principal.getName());
+            String accessT = bearer.split(" ")[1];
+            Jwt jwt = jwtDecoder.decode(accessT);
+            facadePanier.createCommandeFromPanier(token, principal.getName(), (String) jwt.getClaims().get("email"));
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         catch (PanierNotFoundException e) {

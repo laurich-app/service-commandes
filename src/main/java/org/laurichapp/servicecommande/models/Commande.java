@@ -24,6 +24,8 @@ public class Commande {
 
     private String id_utillisateur, id_paiement;
 
+    private String email;
+
     private Double total;
 
     private List<Produit> produits;
@@ -47,6 +49,14 @@ public class Commande {
                 commande.getEtat_livraison().toString(),
                 commande.getStatut_paiement().toString(),
                 commande.getNumero());
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public ObjectId get_idCommande() {

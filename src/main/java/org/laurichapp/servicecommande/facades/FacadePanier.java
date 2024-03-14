@@ -24,7 +24,7 @@ public interface FacadePanier {
      * @param token du panier
      * @return la commande créé
      */
-    void createCommandeFromPanier(String token, String idUtilisateur) throws PanierNotFoundException;
+    void createCommandeFromPanier(String token, String idUtilisateur, String email) throws PanierNotFoundException;
 
     /**
      * Créer un panier en ajoutant un produit

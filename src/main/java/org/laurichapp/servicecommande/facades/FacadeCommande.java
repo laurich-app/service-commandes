@@ -17,7 +17,7 @@ public interface FacadeCommande {
      * Créer une commande
      * Créer une commande à partir d'un panier
      */
-    void createCommande(Panier panier, String idUtilisateur);
+    void createCommande(Panier panier, String idUtilisateur, String email);
 
     /*========== GET ==========*/
     /**
