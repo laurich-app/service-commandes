@@ -3,6 +3,7 @@ package org.laurichapp.servicecommande.facades;
 import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
 import org.laurichapp.servicecommande.dtos.pagination.Paginate;
 import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
+import org.laurichapp.servicecommande.dtos.rabbits.GenererCommandeDTO;
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
 import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.models.Commande;
@@ -53,6 +54,12 @@ public interface FacadeCommande {
      * Met à jours l'état de livraison de la commande.
      */
     Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
+
+    /**
+     * Lors de la validation d'une commande, au retour de la reception des produits depuis le catalogue.
+     * @param genererCommandeDTO
+     */
+    void validerCommandeReceptionProduits(GenererCommandeDTO genererCommandeDTO) throws CommandeNotFoundException;
 
     /*========== DELETE ==========*/
 

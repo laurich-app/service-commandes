@@ -66,4 +66,11 @@ public interface FacadePanier {
      * @param idProduit du produit à supprimer
      */
     void deleteProduitPanier(String token, int idProduit, String couleur) throws ProduitPasDansPanierException, PanierNotFoundException;
+
+    /**
+     * Lors du suppression d'un stock on supprime les produits des paniers correspondants.
+     * @param idProduit
+     * @param couleur
+     */
+    void deleteProduitPanierByIdAndCommande(int idProduit, String couleur);
 }

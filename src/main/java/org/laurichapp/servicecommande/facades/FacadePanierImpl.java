@@ -5,15 +5,18 @@ import org.laurichapp.servicecommande.dtos.in.UpdateProduitDTO;
 import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.laurichapp.servicecommande.models.Panier;
-import org.laurichapp.servicecommande.models.paniers.Couleur;
 import org.laurichapp.servicecommande.models.paniers.Produit;
 import org.laurichapp.servicecommande.repositories.PanierRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class FacadePanierImpl implements FacadePanier {
+    private static final Logger logger = LoggerFactory.getLogger(FacadePanierImpl.class);
 
     PanierRepository panierRepository;
 
@@ -103,5 +106,19 @@ public class FacadePanierImpl implements FacadePanier {
         Produit produit = panier.getProduit(idProduit, couleur);
         panier.getProduits().remove(produit);
         panierRepository.save(panier);
+    }
+
+    @Override
+    public void deleteProduitPanierByIdAndCommande(int idProduit, String couleur) {
+        List<Panier> paniers = this.panierRepository.findByProduitsIdAndCouleur(idProduit, couleur);
+        paniers.stream().forEach(p -> {
+            try {
+                Produit produit = p.getProduit(idProduit, couleur);
+                p.getProduits().remove(produit);
+                panierRepository.save(p);
+            } catch (ProduitPasDansPanierException e) {
+                logger.error("Le produit n'a pas été trouvé dans le panier.");
+            }
+        });
     }
 }

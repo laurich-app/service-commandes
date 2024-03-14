@@ -2,6 +2,7 @@ package org.laurichapp.servicecommande.models;
 
 import org.bson.types.ObjectId;
 import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
+import org.laurichapp.servicecommande.dtos.rabbits.ValiderCommandeDTO;
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
 import org.laurichapp.servicecommande.enums.StatutsPaiment;
 import org.springframework.data.annotation.Id;
@@ -118,5 +119,13 @@ public class Commande {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public static ValiderCommandeDTO toValiderCommandeDTO(Commande commande, Panier panier) {
+        return new ValiderCommandeDTO(
+                commande.get_idCommande().toString(),
+                panier.getProduits().stream().map(org.laurichapp.servicecommande.models.paniers.Produit::toProduitCommandeDTO)
+                        .collect(Collectors.toList())
+        );
     }
 }

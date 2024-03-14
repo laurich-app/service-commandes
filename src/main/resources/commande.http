@@ -22,8 +22,8 @@ Content-Type: application/json
 
 {
   "id" : 1,
-  "couleur_choisi" : "rouge",
-  "quantite" : 1
+  "couleur_choisi" : "ROUGE",
+  "quantite" : 3
 }
 
 > {%
@@ -128,8 +128,8 @@ Content-Type: application/json
 
 {
   "id" : 1,
-  "couleur_choisi" : "rouge",
-  "quantite" : 1
+  "couleur_choisi" : "ROUGE",
+  "quantite" : 3
 }
 
 > {%

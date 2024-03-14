@@ -4,13 +4,17 @@ import org.laurichapp.servicecommande.dtos.out.CommandeDTO;
 import org.laurichapp.servicecommande.dtos.pagination.Paginate;
 import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
 import org.laurichapp.servicecommande.dtos.pagination.Pagination;
+import org.laurichapp.servicecommande.dtos.rabbits.GenererCommandeDTO;
 import org.laurichapp.servicecommande.enums.EtatsLivraison;
 import org.laurichapp.servicecommande.enums.StatutsPaiment;
 import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
+import org.laurichapp.servicecommande.models.commandes.Produit;
 import org.laurichapp.servicecommande.repositories.CommandeRepository;
+import org.laurichapp.servicecommande.services.ServiceRabbitMQSender;
 import org.laurichapp.servicecommande.utils.PageableUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,25 +28,35 @@ public class FacadeCommandeImpl implements FacadeCommande {
 
     private CommandeRepository commandeRepository;
 
-    public FacadeCommandeImpl(CommandeRepository commandeRepository) {
+    private final ServiceRabbitMQSender serviceRabbitMQSender;
+
+    public FacadeCommandeImpl(CommandeRepository commandeRepository, @Autowired ServiceRabbitMQSender serviceRabbitMQSender) {
         this.commandeRepository = commandeRepository;
+        this.serviceRabbitMQSender = serviceRabbitMQSender;
+    }
+
+    private double calculTotal(List<Produit> produits) {
+        Double sommePanier = 0.0;
+        for (Produit p : produits) {
+            sommePanier+= p.getPrix_unitaire()*p.getQuantite();
+        }
+        return sommePanier;
     }
 
     @Override
     public void createCommande(Panier panier, String idUtilisateur) {
-//        List<Produit> produitList = panier.getProduits();
-//        Double sommePanier = 0.0;
-//        for (Produit p : produitList) {
-//            sommePanier+= p.getPrix_unitaire()*p.getQuantite();
-//        }
+
         Commande commande = new Commande();
         commande.setId_utillisateur(idUtilisateur);
         commande.setStatut_paiement(StatutsPaiment.EN_ATTENTE);
         commande.setEtat_livraison(EtatsLivraison.EN_ATTENTE);
-//        commande.setTotal(sommePanier);
+
         // On récupère l'ID pour traitement dans l'ESB
         Commande commandeInserer = commandeRepository.insert(commande);
-        // EST CENSER PROPAGER DANS L'ESB
+        // PROPAGE DANS L'ESB
+        this.serviceRabbitMQSender.validerCommande(
+                Commande.toValiderCommandeDTO(commandeInserer, panier)
+        );
     }
 
     @Override
@@ -93,7 +107,18 @@ public class FacadeCommandeImpl implements FacadeCommande {
         Commande commande = getCommandeById(idCommande);
         commande.setEtat_livraison(etat);
         this.commandeRepository.save(commande);
-        // DECLENCHE PROCESS ESB
         return commande;
+    }
+
+    @Override
+    public void validerCommandeReceptionProduits(GenererCommandeDTO genererCommandeDTO) throws CommandeNotFoundException {
+        Commande commande = getCommandeById(genererCommandeDTO.id_commande());
+        commande.setProduits(
+                genererCommandeDTO.produits().stream().map(Produit::fromProduitCatalogueDTO)
+                        .collect(Collectors.toList())
+        );
+        commande.setTotal(calculTotal(commande.getProduits()));
+        commande.setStatut_paiement(StatutsPaiment.ACCEPTE);
+        commandeRepository.save(commande);
     }
 }

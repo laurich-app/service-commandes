@@ -3,6 +3,7 @@ package org.laurichapp.servicecommande.models.paniers;
 import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
 import org.laurichapp.servicecommande.dtos.out.CouleurDTO;
 import org.laurichapp.servicecommande.dtos.out.ProduitPanierResponseDTO;
+import org.laurichapp.servicecommande.dtos.rabbits.ProduitCommandeDTO;
 
 public class Produit {
     private int id_produit_catalogue;
@@ -51,5 +52,18 @@ public class Produit {
         p.setId_produit_catalogue(a.id());
         p.setQuantite(a.quantite());
         return p;
+    }
+
+    /**
+     * Lors de la validation d'une commande
+     * @param produit
+     * @return
+     */
+    public static ProduitCommandeDTO toProduitCommandeDTO(Produit produit) {
+        return new ProduitCommandeDTO(
+                produit.getId_produit_catalogue(),
+                produit.getCouleur().getLibelle(),
+                produit.getQuantite()
+        );
     }
 }
