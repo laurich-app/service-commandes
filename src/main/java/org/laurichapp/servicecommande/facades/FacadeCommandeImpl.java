@@ -20,8 +20,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +52,8 @@ public class FacadeCommandeImpl implements FacadeCommande {
 
         Commande commande = new Commande();
         commande.setId_utillisateur(idUtilisateur);
+        commande.setNumero(UUID.randomUUID().toString());
+        commande.setDate_creation(Date.from(Instant.now()));
         commande.setStatut_paiement(StatutsPaiment.EN_ATTENTE);
         commande.setEtat_livraison(EtatsLivraison.EN_ATTENTE);
         commande.setEmail(email);
