@@ -31,7 +31,7 @@ class CommandesControllerTest extends ConfigurationCommandesControllerTest {
 
         // WHERE
         MockHttpServletResponse response = mvc.perform(
-                post("/categories")
+                post("/commandes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andReturn().getResponse();

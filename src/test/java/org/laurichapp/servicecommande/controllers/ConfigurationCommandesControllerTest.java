@@ -3,6 +3,8 @@ package org.laurichapp.servicecommande.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.laurichapp.servicecommande.repositories.CommandeRepository;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -15,6 +17,8 @@ import java.util.Map;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+@SpringBootTest(properties = { "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration" })
+@AutoConfigureMockMvc
 public abstract class ConfigurationCommandesControllerTest {
 
     @MockBean
