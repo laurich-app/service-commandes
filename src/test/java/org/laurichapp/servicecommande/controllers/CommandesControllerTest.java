@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-class CommandesControllerTest {
+class CommandesControllerTest extends ConfigurationCommandesControllerTest {
 
     @MockBean
     private FacadeCommande facadeCommande;
