@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/paniers")
@@ -45,13 +44,13 @@ public class PanierController {
     /*========== POST ==========*/
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PanierDTO> createPanier(@Valid @RequestBody AjouterProduitDTO ajouterProduitDTO) {
         Panier panier =  facadePanier.createPanier(ajouterProduitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(Panier.toDTO(panier));
     }
 
     @PostMapping("/{token}/valider_commande")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> createCommandeFromPanier(@RequestHeader("Authorization") String bearer, @PathVariable(name = "token") String token, Principal principal) {
         try {
             String accessT = bearer.split(" ")[1];

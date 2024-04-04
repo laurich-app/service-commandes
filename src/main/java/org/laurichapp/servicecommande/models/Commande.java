@@ -8,21 +8,27 @@ import org.laurichapp.servicecommande.enums.StatutsPaiment;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.laurichapp.servicecommande.models.commandes.Produit;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Document(collection = "commandes")
 public class Commande {
 
     @Id
-    private ObjectId _idCommande;
+    @Field("_id")
+    private ObjectId idCommande;
 
-    private Date date_creation;
+    @Field("date_creation")
+    private Date dateCreation;
 
-    private String id_utillisateur, id_paiement;
+    @Field("id_utilisateur")
+    private String idUtilisateur;
+
+    @Field("id_paiement")
+    private String idPaiement;
 
     private String email;
 
@@ -30,8 +36,11 @@ public class Commande {
 
     private List<Produit> produits;
 
-    private EtatsLivraison etat_livraison;
-    private StatutsPaiment statut_paiement;
+    @Field("etat_livraison")
+    private EtatsLivraison etatLivraison;
+
+    @Field("statut_paiement")
+    private StatutsPaiment statutPaiement;
 
     private String numero;
 
@@ -40,14 +49,14 @@ public class Commande {
     }
 
     public static CommandeDTO toDTO(Commande commande) {
-        return new CommandeDTO(commande.get_idCommande().toString(),
-                commande.getDate_creation(),
-                commande.getId_utillisateur(),
-                commande.getId_paiement(),
+        return new CommandeDTO(commande.getIdCommande().toString(),
+                commande.getDateCreation(),
+                commande.getIdUtilisateur(),
+                commande.getIdPaiement(),
                 commande.getTotal(),
-                commande.getProduits().stream().map(Produit::toProduitDTO).collect(Collectors.toList()),
-                commande.getEtat_livraison().toString(),
-                commande.getStatut_paiement().toString(),
+                commande.getProduits().stream().map(Produit::toProduitDTO).toList(),
+                commande.getEtatLivraison().toString(),
+                commande.getStatutPaiement().toString(),
                 commande.getNumero());
     }
 
@@ -59,36 +68,36 @@ public class Commande {
         this.email = email;
     }
 
-    public ObjectId get_idCommande() {
-        return _idCommande;
+    public ObjectId getIdCommande() {
+        return idCommande;
     }
 
-    public void set_idCommande(ObjectId _idCommande) {
-        this._idCommande = _idCommande;
+    public void setIdCommande(ObjectId idCommande) {
+        this.idCommande = idCommande;
     }
 
-    public Date getDate_creation() {
-        return date_creation;
+    public Date getDateCreation() {
+        return dateCreation;
     }
 
-    public void setDate_creation(Date date_creation) {
-        this.date_creation = date_creation;
+    public void setDateCreation(Date dateCreation) {
+        this.dateCreation = dateCreation;
     }
 
-    public String getId_utillisateur() {
-        return id_utillisateur;
+    public String getIdUtilisateur() {
+        return idUtilisateur;
     }
 
-    public void setId_utillisateur(String id_utillisateur) {
-        this.id_utillisateur = id_utillisateur;
+    public void setIdUtilisateur(String idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
     }
 
-    public String getId_paiement() {
-        return id_paiement;
+    public String getIdPaiement() {
+        return idPaiement;
     }
 
-    public void setId_paiement(String id_paiement) {
-        this.id_paiement = id_paiement;
+    public void setIdPaiement(String idPaiement) {
+        this.idPaiement = idPaiement;
     }
 
     public Double getTotal() {
@@ -107,20 +116,20 @@ public class Commande {
         this.produits = produits;
     }
 
-    public EtatsLivraison getEtat_livraison() {
-        return etat_livraison;
+    public EtatsLivraison getEtatLivraison() {
+        return etatLivraison;
     }
 
-    public void setEtat_livraison(EtatsLivraison etat_livraison) {
-        this.etat_livraison = etat_livraison;
+    public void setEtatLivraison(EtatsLivraison etatLivraison) {
+        this.etatLivraison = etatLivraison;
     }
 
-    public StatutsPaiment getStatut_paiement() {
-        return statut_paiement;
+    public StatutsPaiment getStatutPaiement() {
+        return statutPaiement;
     }
 
-    public void setStatut_paiement(StatutsPaiment statut_paiement) {
-        this.statut_paiement = statut_paiement;
+    public void setStatutPaiement(StatutsPaiment statutPaiement) {
+        this.statutPaiement = statutPaiement;
     }
 
     public String getNumero() {
@@ -133,9 +142,9 @@ public class Commande {
 
     public static ValiderCommandeDTO toValiderCommandeDTO(Commande commande, Panier panier) {
         return new ValiderCommandeDTO(
-                commande.get_idCommande().toString(),
+                commande.getIdCommande().toString(),
                 panier.getProduits().stream().map(org.laurichapp.servicecommande.models.paniers.Produit::toProduitCommandeDTO)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 }

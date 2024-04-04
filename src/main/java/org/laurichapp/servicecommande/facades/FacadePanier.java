@@ -46,12 +46,12 @@ public interface FacadePanier {
      * Met à jour un produit,
      * Si il existe augmente la qte sinon le rajoute au panier
      * @param token du panier
-     * @param id_produit du produit
+     * @param idProduit du produit
      * @param updateProduitDTO produit
      * @return
      * @throws ProduitPasDansPanierException
      */
-    Panier updateProduit(String token, int id_produit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException;
+    Panier updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException;
 
     /*========== DELETE ==========*/
     /**

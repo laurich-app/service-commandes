@@ -13,5 +13,5 @@ public interface PanierRepository extends MongoRepository<Panier, String> {
     Panier findByToken(String token);
 
     @Query("{'produits': { $elemMatch: { 'id_produit_catalogue': ?0, 'couleur.libelle': ?1 } } }")
-    List<Panier> findByProduitsIdAndCouleur(int id_produit_catalogue, String couleur);
+    List<Panier> findByProduitsIdAndCouleur(int idProduitCatalogue, String couleur);
 }

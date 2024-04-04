@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class FacadeCommandeImpl implements FacadeCommande {
@@ -42,7 +41,7 @@ public class FacadeCommandeImpl implements FacadeCommande {
     private double calculTotal(List<Produit> produits) {
         Double sommePanier = 0.0;
         for (Produit p : produits) {
-            sommePanier+= p.getPrix_unitaire()*p.getQuantite();
+            sommePanier+= p.getPrixUnitaire()*p.getQuantite();
         }
         return sommePanier;
     }
@@ -51,11 +50,11 @@ public class FacadeCommandeImpl implements FacadeCommande {
     public void createCommande(Panier panier, String idUtilisateur, String email) {
 
         Commande commande = new Commande();
-        commande.setId_utillisateur(idUtilisateur);
+        commande.setIdUtilisateur(idUtilisateur);
         commande.setNumero(UUID.randomUUID().toString());
-        commande.setDate_creation(Date.from(Instant.now()));
-        commande.setStatut_paiement(StatutsPaiment.EN_ATTENTE);
-        commande.setEtat_livraison(EtatsLivraison.EN_ATTENTE);
+        commande.setDateCreation(Date.from(Instant.now()));
+        commande.setStatutPaiement(StatutsPaiment.EN_ATTENTE);
+        commande.setEtatLivraison(EtatsLivraison.EN_ATTENTE);
         commande.setEmail(email);
 
         // On récupère l'ID pour traitement dans l'ESB
@@ -67,21 +66,20 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public Paginate<CommandeDTO> getAllCommandesUtilisateur(String id_utilisateur, PaginateRequestDTO paginateRequestDTO) {
+    public Paginate<CommandeDTO> getAllCommandesUtilisateur(String idUtilisateur, PaginateRequestDTO paginateRequestDTO) {
         Pageable pageable = PageableUtils.convert(paginateRequestDTO);
-        Page<Commande> paginated = commandeRepository.findAllById_utillisateur(id_utilisateur, pageable);
+        Page<Commande> paginated = commandeRepository.findAllByIdUtilisateur(idUtilisateur, pageable);
 
-        List<CommandeDTO> dtos = paginated.stream().map(Commande::toDTO).collect(Collectors.toList());
+        List<CommandeDTO> dtos = paginated.stream().map(Commande::toDTO).toList();
 
         // Créer un objet Paginate contenant les blogs paginés
-        Paginate<CommandeDTO> paginate = new Paginate<>(dtos, new Pagination(Math.toIntExact(paginated.getTotalElements()),
+        return new Paginate<>(dtos, new Pagination(Math.toIntExact(paginated.getTotalElements()),
                 paginateRequestDTO.limit(), paginateRequestDTO.page()));
-        return paginate;
     }
 
     @Override
     public Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException {
-        Commande commande = commandeRepository.findCommandeBy_idCommandeAndId_utillisateur(idCommande, idUtilisateur);
+        Commande commande = commandeRepository.findCommandeByIdCommandeAndIdUtilisateur(idCommande, idUtilisateur);
         if(commande == null)
             throw new CommandeNotFoundException();
         return commande;
@@ -93,12 +91,11 @@ public class FacadeCommandeImpl implements FacadeCommande {
         Pageable pageable = PageableUtils.convert(paginateRequestDTO);
         Page<Commande> paginated = commandeRepository.findAll(pageable);
 
-        List<CommandeDTO> dtos = paginated.stream().map(Commande::toDTO).collect(Collectors.toList());
+        List<CommandeDTO> dtos = paginated.stream().map(Commande::toDTO).toList();
 
         // Créer un objet Paginate contenant les blogs paginés
-        Paginate<CommandeDTO> paginate = new Paginate<>(dtos, new Pagination(Math.toIntExact(paginated.getTotalElements()),
+        return new Paginate<>(dtos, new Pagination(Math.toIntExact(paginated.getTotalElements()),
                 paginateRequestDTO.limit(), paginateRequestDTO.page()));
-        return paginate;
     }
 
     @Override
@@ -112,7 +109,7 @@ public class FacadeCommandeImpl implements FacadeCommande {
     @Override
     public Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
         Commande commande = getCommandeById(idCommande);
-        commande.setEtat_livraison(etat);
+        commande.setEtatLivraison(etat);
         this.commandeRepository.save(commande);
         return commande;
     }
@@ -122,10 +119,10 @@ public class FacadeCommandeImpl implements FacadeCommande {
         Commande commande = getCommandeById(genererCommandeDTO.id_commande());
         commande.setProduits(
                 genererCommandeDTO.produits().stream().map(Produit::fromProduitCatalogueDTO)
-                        .collect(Collectors.toList())
+                        .toList()
         );
         commande.setTotal(calculTotal(commande.getProduits()));
-        commande.setStatut_paiement(StatutsPaiment.ACCEPTE);
+        commande.setStatutPaiement(StatutsPaiment.ACCEPTE);
         Commande c = commandeRepository.save(commande);
         this.serviceRabbitMQSender.notifierCommande(
                 new NotificationCommandeDTO(

@@ -27,22 +27,22 @@ public class ServiceRabbitMQReceiver implements RabbitListenerConfigurer {
 
     @RabbitListener(queues = "${spring.rabbitmq.queue.catalogue.stock.supprimer}")
     public void consumeStockSupprimer(SupprimerStockDTO stockDTO) {
-        logger.info("Stock supprimé : " + stockDTO);
+        logger.info("Stock supprimé : {}", stockDTO);
         facadePanier.deleteProduitPanierByIdAndCommande(stockDTO.id_produit(), stockDTO.couleur());
     }
 
     @RabbitListener(queues = "${spring.rabbitmq.queue.catalogue.generer.commande}")
     public void consumeGenererCommande(GenererCommandeDTO genererCommandeDTO) {
-        logger.info("Generer commande : " + genererCommandeDTO);
+        logger.info("Generer commande : {}", genererCommandeDTO);
         try {
             facadeCommande.validerCommandeReceptionProduits(genererCommandeDTO);
         } catch (CommandeNotFoundException e) {
-            logger.error("Commande introuvable : "+genererCommandeDTO);
+            logger.error("Commande introuvable : {}", genererCommandeDTO);
         }
     }
 
     @Override
     public void configureRabbitListeners(RabbitListenerEndpointRegistrar rabbitListenerEndpointRegistrar) {
-
+        // NOP
     }
 }

@@ -9,7 +9,6 @@ import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.models.Commande;
 import org.laurichapp.servicecommande.models.Panier;
 
-import java.util.List;
 
 public interface FacadeCommande {
 

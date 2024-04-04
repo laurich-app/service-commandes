@@ -4,21 +4,24 @@ import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
 import org.laurichapp.servicecommande.dtos.out.CouleurDTO;
 import org.laurichapp.servicecommande.dtos.out.ProduitPanierResponseDTO;
 import org.laurichapp.servicecommande.dtos.rabbits.ProduitCommandeDTO;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 public class Produit {
-    private int id_produit_catalogue;
+    @Field("id_produit_catalogue")
+    private int idProduitCatalogue;
     private Couleur couleur;
     private int quantite;
 
     public Produit() {
+        // NOP
     }
 
-    public int getId_produit_catalogue() {
-        return id_produit_catalogue;
+    public int getIdProduitCatalogue() {
+        return idProduitCatalogue;
     }
 
-    public void setId_produit_catalogue(int id_produit_catalogue) {
-        this.id_produit_catalogue = id_produit_catalogue;
+    public void setIdProduitCatalogue(int idProduitCatalogue) {
+        this.idProduitCatalogue = idProduitCatalogue;
     }
 
     public Couleur getCouleur() {
@@ -39,7 +42,7 @@ public class Produit {
 
     public static ProduitPanierResponseDTO toProduitOutDTO(Produit p) {
         return new ProduitPanierResponseDTO(
-                p.getId_produit_catalogue(),
+                p.getIdProduitCatalogue(),
                 new CouleurDTO(p.getCouleur().getLibelle()),
                 p.getQuantite()
         );
@@ -49,7 +52,7 @@ public class Produit {
         Produit p = new Produit();
         p.setCouleur(new Couleur());
         p.getCouleur().setLibelle(a.couleur_choisi());
-        p.setId_produit_catalogue(a.id());
+        p.setIdProduitCatalogue(a.id());
         p.setQuantite(a.quantite());
         return p;
     }
@@ -61,7 +64,7 @@ public class Produit {
      */
     public static ProduitCommandeDTO toProduitCommandeDTO(Produit produit) {
         return new ProduitCommandeDTO(
-                produit.getId_produit_catalogue(),
+                produit.getIdProduitCatalogue(),
                 produit.getCouleur().getLibelle(),
                 produit.getQuantite()
         );

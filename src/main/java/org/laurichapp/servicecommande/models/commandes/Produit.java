@@ -4,9 +4,11 @@ import org.laurichapp.servicecommande.dtos.out.CategorieOutDTO;
 import org.laurichapp.servicecommande.dtos.out.CouleurDTO;
 import org.laurichapp.servicecommande.dtos.out.ProduitCommandeResponseDTO;
 import org.laurichapp.servicecommande.dtos.rabbits.ProduitCatalogueDTO;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 public class Produit {
-    private double prix_unitaire;
+    @Field("prix_unitaire")
+    private double prixUnitaire;
     private String sexe;
     private String taille;
     private String description;
@@ -31,12 +33,12 @@ public class Produit {
         this.categorie = categorie;
     }
 
-    public double getPrix_unitaire() {
-        return prix_unitaire;
+    public double getPrixUnitaire() {
+        return prixUnitaire;
     }
 
-    public void setPrix_unitaire(double prix_unitaire) {
-        this.prix_unitaire = prix_unitaire;
+    public void setPrixUnitaire(double prixUnitaire) {
+        this.prixUnitaire = prixUnitaire;
     }
 
     public String getSexe() {
@@ -81,7 +83,7 @@ public class Produit {
 
     public static ProduitCommandeResponseDTO toProduitDTO(Produit p) {
         return new ProduitCommandeResponseDTO(
-            p.getPrix_unitaire(),
+            p.getPrixUnitaire(),
             p.getSexe(),
             p.getTaille(),
             p.getLibelle(),
@@ -103,7 +105,7 @@ public class Produit {
         produit.setQuantite(dto.quantite());
         produit.setSexe(dto.sexe());
         produit.setTaille(dto.taille());
-        produit.setPrix_unitaire(dto.prix());
+        produit.setPrixUnitaire(dto.prix());
         return produit;
     }
 }

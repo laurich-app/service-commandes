@@ -32,12 +32,12 @@ public class ServiceRabbitMQSender {
     }
 
     public void validerCommande(ValiderCommandeDTO validerCommandeDTO){
-        logger.info("Valider commande : " + validerCommandeDTO);
+        logger.info("Valider commande : {}", validerCommandeDTO);
         rabbitTemplate.convertAndSend(exchangeCommandeValiderCommande,routingkeyCommandeValiderCommande, validerCommandeDTO);
     }
 
     public void notifierCommande(NotificationCommandeDTO n) {
-        logger.info("Notifier l'utilisateur : " + n);
+        logger.info("Notifier l'utilisateur : {}", n);
         rabbitTemplate.convertAndSend(exchangeCommandeNotification,routingkeyCommandeNotification, n);
     }
 }
