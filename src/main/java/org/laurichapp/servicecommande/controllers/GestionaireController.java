@@ -34,7 +34,7 @@ public class GestionaireController {
 
     @GetMapping("/commandes")
     @PreAuthorize("hasRole('GESTIONNAIRE')")
-    public ResponseEntity<Paginate<CommandeDTO>> getAllComandes(
+    public ResponseEntity<Paginate<CommandeDTO>> getAllCommandes(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "limit", defaultValue = "10", required = false) int limit,
             @RequestParam(name = "sort", required = false) String sort,
@@ -53,7 +53,7 @@ public class GestionaireController {
 
     @GetMapping("/commandes/{id}")
     @PreAuthorize("hasRole('GESTIONNAIRE')")
-    public ResponseEntity<CommandeDTO> getComandesById(@PathVariable String id) {
+    public ResponseEntity<CommandeDTO> getCommandeById(@PathVariable String id) {
         try {
             Commande commande = facadeCommande.getCommandeById(id);
             return ResponseEntity.ok(Commande.toDTO(commande));
