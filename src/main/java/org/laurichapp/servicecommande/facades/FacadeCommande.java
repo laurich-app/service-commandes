@@ -43,6 +43,8 @@ public interface FacadeCommande {
      * @param idCommande : id de la commande
      * @return une commande
      */
+    CommandeDTO getCommandeDTOById(String idCommande) throws CommandeNotFoundException;
+
     Commande getCommandeById(String idCommande) throws CommandeNotFoundException;
 
     /*========== POST ==========*/
@@ -53,6 +55,8 @@ public interface FacadeCommande {
      * Met à jours l'état de livraison de la commande.
      */
     Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
+
+    CommandeDTO updateEtatLivraisonDTO(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
 
     /**
      * Lors de la validation d'une commande, au retour de la reception des produits depuis le catalogue.

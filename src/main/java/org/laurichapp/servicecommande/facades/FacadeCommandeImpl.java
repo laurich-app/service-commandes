@@ -107,11 +107,26 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
+    public CommandeDTO getCommandeDTOById(String idCommande) throws CommandeNotFoundException {
+        Optional<Commande> c = commandeRepository.findById(idCommande);
+        if(c.isEmpty())
+            throw new CommandeNotFoundException();
+        return Commande.toDTO(c.get());
+    }
+
+    @Override
     public Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
         Commande commande = getCommandeById(idCommande);
         commande.setEtatLivraison(etat);
         this.commandeRepository.save(commande);
         return commande;
+    }
+    @Override
+    public CommandeDTO updateEtatLivraisonDTO(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
+        Commande commande = getCommandeById(idCommande);
+        commande.setEtatLivraison(etat);
+        this.commandeRepository.save(commande);
+        return Commande.toDTO(commande);
     }
 
     @Override

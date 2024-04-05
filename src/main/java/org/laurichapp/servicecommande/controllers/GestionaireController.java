@@ -9,7 +9,6 @@ import org.laurichapp.servicecommande.dtos.pagination.Paginate;
 import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
 import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.facades.FacadeCommande;
-import org.laurichapp.servicecommande.models.Commande;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -55,8 +54,8 @@ public class GestionaireController {
     @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity<CommandeDTO> getCommandeById(@PathVariable String id) {
         try {
-            Commande commande = facadeCommande.getCommandeById(id);
-            return ResponseEntity.ok(Commande.toDTO(commande));
+            CommandeDTO commande = facadeCommande.getCommandeDTOById(id);
+            return ResponseEntity.ok(commande);
         } catch (CommandeNotFoundException c){
             return ResponseEntity.notFound().build();
         }
@@ -69,13 +68,13 @@ public class GestionaireController {
     @PutMapping("/commandes/{id}/livraison")
     @PreAuthorize("hasRole('GESTIONNAIRE')")
     public ResponseEntity<CommandeDTO> updateCommande(@PathVariable String id, @Valid @RequestBody LivraisonCommandeDTO livraisonCommandeDTO) {
-        Commande commande = null;
+        CommandeDTO commande = null;
         try {
-            commande = facadeCommande.updateEtatLivraison(id, livraisonCommandeDTO.etat_livraison());
+            commande = facadeCommande.updateEtatLivraisonDTO(id, livraisonCommandeDTO.etat_livraison());
         } catch (CommandeNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(Commande.toDTO(commande));
+        return ResponseEntity.status(HttpStatus.CREATED).body(commande);
     }
 
     /*========== DELETE ==========*/

@@ -60,18 +60,6 @@ public class Commande {
                 commande.getNumero());
     }
 
-//    public static Commande fromDTO(CommandeDTO commandeDTO) {
-//        return new Commande( commandeDTO._id(),
-//                commandeDTO.date_creation(),
-//                commandeDTO.id_utillisateur(),
-//                commandeDTO.id_paiement(),
-//                commandeDTO.total(),
-//                commandeDTO.produits().stream().map(Produit::).toList(),
-//                EtatsLivraison.valueOf(commandeDTO.etat_livraison()),
-//                StatutsPaiment.valueOf(commandeDTO.statut_paiement()),
-//                commandeDTO.numero());
-//    }
-
     public String getEmail() {
         return email;
     }
