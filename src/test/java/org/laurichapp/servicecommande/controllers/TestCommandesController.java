@@ -43,6 +43,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
     //                                   GET getAllCommandes
     // ===============================================================================================
 
+    /**
+     * Si non connecté : UNAUTHORIZED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetAllCommandesUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // WHERE
@@ -56,6 +62,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
+    /**
+     * Si violation : BAD_REQUEST
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetAllCommandesViolation(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -77,6 +89,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
+    /**
+     * Si admin : OK
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetAllCommandesOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -99,6 +117,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
     //                                   GET getCommande
     // ===============================================================================================
 
+    /**
+     * Si non connecté : UNAUTHORIZED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // WHERE
@@ -112,6 +136,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
+    /**
+     * Si commande non trouvée : NOT_FOUND
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeNotFound(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -129,6 +159,12 @@ class TestCommandesController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    /**
+     * Si commande trouvée : OK
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -148,8 +184,6 @@ class TestCommandesController extends TestConfigurationControlleurRest {
         // WHEN
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-
-
 
 
 }

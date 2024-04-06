@@ -46,7 +46,7 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     // ===============================================================================================
 
     /**
-     * Si non connecté, Unauthorized
+     * Si non connecté : UNAUTHORIZED
      * @param mvc
      * @param objectMapper
      * @throws Exception
@@ -65,7 +65,7 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     }
 
     /**
-     * Si non admin, Forbidden
+     * Si non admin : FORBIDDEN
      * @param mvc
      * @param objectMapper
      * @throws Exception
@@ -84,6 +84,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
+    /**
+     * Si violation : BAD_REQUEST
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetAllCommandesViolation(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -107,7 +113,7 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     }
 
     /**
-     * Si admin OK
+     * Si admin et toutes les commandes trouvées : OK
      * @param mvc
      * @param objectMapper
      * @throws Exception
@@ -136,6 +142,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     //                                   GET getCommandeById
     // ===============================================================================================
 
+    /**
+     * Si non connecté : UNAUTHORIZED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeByIdUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // WHERE
@@ -149,6 +161,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
+    /**
+     * Si non admin : FORBIDDEN
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeByIdNotAdminForbidden(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // WHERE
@@ -163,6 +181,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
+    /**
+     * Si commande non trouvée : NOT_FOUND
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeByIdNotFoundAdmin(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -182,6 +206,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    /**
+     * Si admin et commande trouvée : OK
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testGetCommandeByIdOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -207,6 +237,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     //                                   PUT updateCommande
     // ===============================================================================================
 
+    /**
+     * Si non connecté : UNAUTHORIZED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testUpdateCommandeUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -224,6 +260,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 
+    /**
+     * Si non admin : FORBIDDEN
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testUpdateCommandeNotAdminForbidden(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -242,6 +284,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
     }
 
+    /**
+     * Si commande non trouvée : NOT_FOUND
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testUpdateCommandeNotFoundAdmin(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
@@ -263,6 +311,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    /**
+     * Si admin et commande mise a jour : CREATED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
     @Test
     void testUpdateCommandeOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
