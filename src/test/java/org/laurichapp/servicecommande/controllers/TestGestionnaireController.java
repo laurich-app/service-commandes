@@ -35,12 +35,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 class TestGestionnaireController extends TestConfigurationControlleurRest {
+
     @MockBean
     private FacadeCommandeImpl facadeCommande;
-
     @MockBean
     private Validator validator;
-
 
     // ===============================================================================================
     //                                   GET getAllCommandes
@@ -54,8 +53,6 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
      */
     @Test
     void testGetAllCommandesUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
-        // BEFORE
-
         // WHERE
         MockHttpServletResponse response = mvc.perform(
                 get("/gestionnaires/commandes")
@@ -75,7 +72,6 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
      */
     @Test
     void testGetAllCommandesNotAdminForbidden(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
-
         // WHERE
         MockHttpServletResponse response = mvc.perform(
                 get("/gestionnaires/commandes")
@@ -91,10 +87,9 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     @Test
     void testGetAllCommandesViolation(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
+        // Définie l'admin en admin
         this.defineAdminUser();
-
         Paginate<CommandeDTO> p = new Paginate<>(List.of(), new Pagination(2, 10, 0));
-
         Set<ConstraintViolation<PaginateRequestDTO>> mocked = mock(Set.class);
         doReturn(mocked).when(this.validator).validate(any(PaginateRequestDTO.class));
         doReturn(false).when(mocked).isEmpty();
@@ -156,7 +151,6 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
 
     @Test
     void testGetCommandeByIdNotAdminForbidden(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
-
         // WHERE
         MockHttpServletResponse response = mvc.perform(
                 get("/gestionnaires/commandes/123")
@@ -175,6 +169,7 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
         // Définie l'admin en admin
         this.defineAdminUser();
         doThrow(CommandeNotFoundException.class).when(facadeCommande).getCommandeDTOById("123");
+
         // WHERE
         MockHttpServletResponse response = mvc.perform(
                 get("/gestionnaires/commandes/123")
@@ -190,11 +185,10 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     @Test
     void testGetCommandeByIdOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
+        // Définie l'admin en admin
         this.defineAdminUser();
-
         ProduitCommandeResponseDTO produitCommandeResponseDTO = new ProduitCommandeResponseDTO(10.00, "Homme", "M", "Pantalon", "Ceci est la description de mon pantalon", new CouleurDTO("Bleu"), 2, new CategorieOutDTO("Vêtements"));
         CommandeDTO commandeDTO = new CommandeDTO("123", new Date(), "1", "1", 20.00, List.of(produitCommandeResponseDTO), EtatsLivraison.EN_ATTENTE.name(), StatutsPaiment.ACCEPTE.name(), "12345");
-
         doReturn(commandeDTO).when(facadeCommande).getCommandeDTOById("123");
 
         // WHERE
@@ -251,9 +245,10 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     @Test
     void testUpdateCommandeNotFoundAdmin(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
+        // Définie l'admin en admin
         this.defineAdminUser();
         LivraisonCommandeDTO livraisonCommandeDTO = new LivraisonCommandeDTO(EtatsLivraison.EN_ATTENTE);
-        doThrow(CommandeNotFoundException.class).when(facadeCommande).updateEtatLivraisonDTO(eq("123"), any(EtatsLivraison.class));
+        doThrow(CommandeNotFoundException.class).when(facadeCommande).updateEtatLivraison(eq("123"), any(EtatsLivraison.class));
 
         //WHERE
         MockHttpServletResponse response = mvc.perform(
@@ -271,14 +266,12 @@ class TestGestionnaireController extends TestConfigurationControlleurRest {
     @Test
     void testUpdateCommandeOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
         // BEFORE
+        // Définie l'admin en admin
         this.defineAdminUser();
-
         ProduitCommandeResponseDTO produitCommandeResponseDTO = new ProduitCommandeResponseDTO(10.00, "Homme", "M", "Pantalon", "Ceci est la description de mon pantalon", new CouleurDTO("Bleu"), 2, new CategorieOutDTO("Vêtements"));
         CommandeDTO commandeDTO = new CommandeDTO("123", new Date(), "1", "1", 20.00, List.of(produitCommandeResponseDTO), EtatsLivraison.EN_ATTENTE.name(), StatutsPaiment.ACCEPTE.name(), "12345");
-
         LivraisonCommandeDTO livraisonCommandeDTO = new LivraisonCommandeDTO(EtatsLivraison.EN_COURS);
-
-        doReturn(commandeDTO).when(facadeCommande).updateEtatLivraisonDTO(eq("123"), any(EtatsLivraison.class));
+        doReturn(commandeDTO).when(facadeCommande).updateEtatLivraison(eq("123"), any(EtatsLivraison.class));
 
         //WHERE
         MockHttpServletResponse response = mvc.perform(

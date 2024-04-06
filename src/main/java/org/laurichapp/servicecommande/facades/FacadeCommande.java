@@ -27,10 +27,12 @@ public interface FacadeCommande {
 
     /**
      * Récupère une commande pour l'utilisateur connecté.
-     * @param idCommande : id de la commande
-     * @return une commande
+     * @param idCommande
+     * @param idUtilisateur
+     * @return
+     * @throws CommandeNotFoundException
      */
-    Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException;
+    CommandeDTO getCommandeDTOUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException;
 
     /**
      * Récupère la liste des commandes pagines.
@@ -43,9 +45,15 @@ public interface FacadeCommande {
      * @param idCommande : id de la commande
      * @return une commande
      */
-    CommandeDTO getCommandeDTOById(String idCommande) throws CommandeNotFoundException;
-
     Commande getCommandeById(String idCommande) throws CommandeNotFoundException;
+
+    /**
+     * Récupère une commandeDTO.
+     * @param idCommande : id de la commande
+     * @return une commandeDTO
+     * @throws CommandeNotFoundException
+     */
+    CommandeDTO getCommandeDTOById(String idCommande) throws CommandeNotFoundException;
 
     /*========== POST ==========*/
 
@@ -53,10 +61,12 @@ public interface FacadeCommande {
 
     /**
      * Met à jours l'état de livraison de la commande.
+     * @param idCommande
+     * @param etat
+     * @return
+     * @throws CommandeNotFoundException
      */
-    Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
-
-    CommandeDTO updateEtatLivraisonDTO(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
+    CommandeDTO updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException;
 
     /**
      * Lors de la validation d'une commande, au retour de la reception des produits depuis le catalogue.

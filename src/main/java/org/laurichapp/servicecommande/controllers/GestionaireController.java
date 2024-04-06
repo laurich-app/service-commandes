@@ -70,7 +70,7 @@ public class GestionaireController {
     public ResponseEntity<CommandeDTO> updateCommande(@PathVariable String id, @Valid @RequestBody LivraisonCommandeDTO livraisonCommandeDTO) {
         CommandeDTO commande = null;
         try {
-            commande = facadeCommande.updateEtatLivraisonDTO(id, livraisonCommandeDTO.etat_livraison());
+            commande = facadeCommande.updateEtatLivraison(id, livraisonCommandeDTO.etat_livraison());
         } catch (CommandeNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

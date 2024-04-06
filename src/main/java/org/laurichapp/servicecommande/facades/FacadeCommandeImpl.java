@@ -78,11 +78,11 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public Commande getCommandeUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException {
+    public CommandeDTO getCommandeDTOUtilisateurById(String idCommande, String idUtilisateur) throws CommandeNotFoundException {
         Commande commande = commandeRepository.findCommandeByIdCommandeAndIdUtilisateur(idCommande, idUtilisateur);
         if(commande == null)
             throw new CommandeNotFoundException();
-        return commande;
+        return Commande.toDTO(commande);
     }
 
 
@@ -115,14 +115,7 @@ public class FacadeCommandeImpl implements FacadeCommande {
     }
 
     @Override
-    public Commande updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
-        Commande commande = getCommandeById(idCommande);
-        commande.setEtatLivraison(etat);
-        this.commandeRepository.save(commande);
-        return commande;
-    }
-    @Override
-    public CommandeDTO updateEtatLivraisonDTO(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
+    public CommandeDTO updateEtatLivraison(String idCommande, EtatsLivraison etat) throws CommandeNotFoundException {
         Commande commande = getCommandeById(idCommande);
         commande.setEtatLivraison(etat);
         this.commandeRepository.save(commande);

@@ -7,7 +7,6 @@ import org.laurichapp.servicecommande.dtos.pagination.Paginate;
 import org.laurichapp.servicecommande.dtos.pagination.PaginateRequestDTO;
 import org.laurichapp.servicecommande.exceptions.CommandeNotFoundException;
 import org.laurichapp.servicecommande.facades.FacadeCommande;
-import org.laurichapp.servicecommande.models.Commande;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -54,8 +53,8 @@ public class CommandesController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CommandeDTO> getCommande(@PathVariable String id, Principal principal) {
         try {
-            Commande commandes = facadeCommande.getCommandeUtilisateurById(id, principal.getName());
-            return ResponseEntity.ok(Commande.toDTO(commandes));
+            CommandeDTO commande = facadeCommande.getCommandeDTOUtilisateurById(id, principal.getName());
+            return ResponseEntity.ok(commande);
         } catch (CommandeNotFoundException c) {
             return ResponseEntity.notFound().build();
         }
