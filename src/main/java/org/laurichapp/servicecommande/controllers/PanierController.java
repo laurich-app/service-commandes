@@ -7,7 +7,6 @@ import org.laurichapp.servicecommande.dtos.out.PanierDTO;
 import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.laurichapp.servicecommande.facades.FacadePanier;
-import org.laurichapp.servicecommande.models.Panier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,8 +33,8 @@ public class PanierController {
     @GetMapping("/{token}")
     public ResponseEntity<PanierDTO> getPanier(@PathVariable String token) {
         try {
-            Panier panier = facadePanier.getPanier(token);
-            return ResponseEntity.ok(Panier.toDTO(panier));
+            PanierDTO panier = facadePanier.getPanier(token);
+            return ResponseEntity.ok(panier);
         } catch (PanierNotFoundException p) {
             return ResponseEntity.notFound().build();
         }
@@ -45,8 +44,8 @@ public class PanierController {
 
     @PostMapping
     public ResponseEntity<PanierDTO> createPanier(@Valid @RequestBody AjouterProduitDTO ajouterProduitDTO) {
-        Panier panier =  facadePanier.createPanier(ajouterProduitDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Panier.toDTO(panier));
+        PanierDTO panier =  facadePanier.createPanier(ajouterProduitDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(panier);
     }
 
     @PostMapping("/{token}/valider_commande")
@@ -66,8 +65,8 @@ public class PanierController {
     @PostMapping("/{token}")
     public ResponseEntity<PanierDTO> addProduit(@PathVariable String token, @Valid @RequestBody AjouterProduitDTO ajouterProduitDTO) {
         try {
-            Panier panier = facadePanier.addProduit(token, ajouterProduitDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Panier.toDTO(panier));
+            PanierDTO panier = facadePanier.addProduit(token, ajouterProduitDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(panier);
         } catch (PanierNotFoundException p) {
             return ResponseEntity.notFound().build();
         }
@@ -77,13 +76,13 @@ public class PanierController {
 
     @PutMapping("/{token}/produits/{id}")
     public ResponseEntity<PanierDTO> updateProduit(@PathVariable String token, @PathVariable String id, @Valid @RequestBody UpdateProduitDTO updateProduitDTO) {
-        Panier panier = null;
+        PanierDTO panier = null;
         try {
             panier = facadePanier.updateProduit(token, Integer.parseInt(id), updateProduitDTO);
         } catch (ProduitPasDansPanierException | PanierNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(Panier.toDTO(panier));
+        return ResponseEntity.ok(panier);
     }
 
     /*========== DELETE ==========*/

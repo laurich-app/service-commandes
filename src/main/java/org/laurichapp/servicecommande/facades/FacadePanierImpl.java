@@ -2,6 +2,7 @@ package org.laurichapp.servicecommande.facades;
 
 import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
 import org.laurichapp.servicecommande.dtos.in.UpdateProduitDTO;
+import org.laurichapp.servicecommande.dtos.out.PanierDTO;
 import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
 import org.laurichapp.servicecommande.models.Panier;
@@ -29,11 +30,11 @@ public class FacadePanierImpl implements FacadePanier {
 
 
     @Override
-    public Panier getPanier(String token) throws PanierNotFoundException {
+    public PanierDTO getPanier(String token) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
         if(panier == null)
             throw new PanierNotFoundException();
-        return panier;
+        return Panier.toDTO(panier);
     }
 
     @Override
@@ -46,28 +47,28 @@ public class FacadePanierImpl implements FacadePanier {
     }
 
     @Override
-    public Panier createPanier(AjouterProduitDTO produitDTO) {
+    public PanierDTO createPanier(AjouterProduitDTO produitDTO) {
         Panier panier = new Panier();
         Produit produit = Produit.fromDTO(produitDTO);
         panier.getProduits().add(produit);
         panier.setToken(UUID.randomUUID().toString());
         this.panierRepository.insert(panier);
-        return panier;
+        return Panier.toDTO(panier);
     }
 
     @Override
-    public Panier addProduit(String token, AjouterProduitDTO produitDTO) throws PanierNotFoundException {
+    public PanierDTO addProduit(String token, AjouterProduitDTO produitDTO) throws PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
         if(panier == null)
             throw new PanierNotFoundException();
         Produit produit = Produit.fromDTO(produitDTO);
         panier.getProduits().add(produit);
         panierRepository.save(panier);
-        return panier;
+        return Panier.toDTO(panier);
     }
 
     @Override
-    public Panier updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException {
+    public PanierDTO updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException {
         Panier panier = panierRepository.findByToken(token);
         if(panier == null)
             throw new PanierNotFoundException();
@@ -81,13 +82,12 @@ public class FacadePanierImpl implements FacadePanier {
                 produit.setQuantite(updateProduitDTO.quantite());
                 panierRepository.save(panier);
             }
-            return panier;
+            return Panier.toDTO(panier);
         }
         else { // si la qte est == 0 alors on supprime le produit
             this.deleteProduitPanier(token, idProduit, updateProduitDTO.couleur_choisi());
-            return panierRepository.findByToken(token);
+            return Panier.toDTO(panierRepository.findByToken(token));
         }
-
     }
 
     @Override

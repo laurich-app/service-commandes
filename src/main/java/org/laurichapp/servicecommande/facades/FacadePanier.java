@@ -2,9 +2,9 @@ package org.laurichapp.servicecommande.facades;
 
 import org.laurichapp.servicecommande.dtos.in.AjouterProduitDTO;
 import org.laurichapp.servicecommande.dtos.in.UpdateProduitDTO;
+import org.laurichapp.servicecommande.dtos.out.PanierDTO;
 import org.laurichapp.servicecommande.exceptions.PanierNotFoundException;
 import org.laurichapp.servicecommande.exceptions.ProduitPasDansPanierException;
-import org.laurichapp.servicecommande.models.Panier;
 
 public interface FacadePanier {
 
@@ -15,7 +15,7 @@ public interface FacadePanier {
      * @param token du panier
      * @return le panier
      */
-    Panier getPanier(String token) throws PanierNotFoundException;
+    PanierDTO getPanier(String token) throws PanierNotFoundException;
 
     /*========== POST ==========*/
     /**
@@ -31,14 +31,14 @@ public interface FacadePanier {
      * @param produitDTO le produit à ajouter
      * @return
      */
-    Panier createPanier(AjouterProduitDTO produitDTO);
+    PanierDTO createPanier(AjouterProduitDTO produitDTO);
 
     /**
      * Ajouter un produit
      * @param token du panier
      * @param produitDTO à ajouter
      */
-    Panier addProduit(String token, AjouterProduitDTO produitDTO) throws PanierNotFoundException;
+    PanierDTO addProduit(String token, AjouterProduitDTO produitDTO) throws PanierNotFoundException;
 
     /*========== PUT ==========*/
 
@@ -51,7 +51,7 @@ public interface FacadePanier {
      * @return
      * @throws ProduitPasDansPanierException
      */
-    Panier updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException;
+    PanierDTO updateProduit(String token, int idProduit, UpdateProduitDTO updateProduitDTO) throws ProduitPasDansPanierException, PanierNotFoundException;
 
     /*========== DELETE ==========*/
     /**
