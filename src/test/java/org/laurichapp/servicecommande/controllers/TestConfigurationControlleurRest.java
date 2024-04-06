@@ -48,6 +48,7 @@ public abstract class TestConfigurationControlleurRest {
         doReturn(claims).when(jwt).getClaims();
         claims.put("roles", List.of("USER"));
         doReturn("1").when(jwt).getSubject();
+        claims.put("email", "email@email.com");
     }
 
     public String getAccessToken() {

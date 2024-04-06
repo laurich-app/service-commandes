@@ -113,47 +113,72 @@ class TestPanierController extends TestConfigurationControlleurRest {
     //                                   POST createCommandeFromPanier
     // ===============================================================================================
 
-//    /**
-//     * Si non connecté : UNAUTHORIZED
-//     * @param mvc
-//     * @param objectMapper
-//     * @throws Exception
-//     */
-//    @Test
-//    void testCreateCommandeFromPanierUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
-//        // WHERE
-//        MockHttpServletResponse response = mvc.perform(
-//                post("/paniers/123456/valider_commande")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//        ).andReturn().getResponse();
-//
-//        // WHEN
-//        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
-//    }
-//
-//    /**
-//     * Si panier non trouvé : NOT_FOUND
-//     * @param mvc
-//     * @param objectMapper
-//     * @throws Exception
-//     */
-//    @Test
-//    void testCreateCommandeFromPanierNotFound(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
-//        // BEFORE
-//        doThrow(PanierNotFoundException.class).when(facadePanier).createCommandeFromPanier("123456","1","test@test.com");
-//
-//        // WHERE
-//        MockHttpServletResponse response = mvc.perform(
-//                post("/paniers/123456/valider_commande")
-//                        .header("Authorization", "Bearer "+getAccessToken())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//        ).andReturn().getResponse();
-//
-//        // WHEN
-//        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-//    }
+    /**
+     * Si non connecté : UNAUTHORIZED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
+    @Test
+    void testCreateCommandeFromPanierUnauthorized(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
+        // WHERE
+        MockHttpServletResponse response = mvc.perform(
+                post("/paniers/123456/valider_commande")
+                        .header("Authorization", "Bearer ")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // WHEN
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+    }
+
+    /**
+     * Si panier non trouvé : NOT_FOUND
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
+    @Test
+    void testCreateCommandeFromPanierNotFound(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
+        // BEFORE
+        doThrow(PanierNotFoundException.class).when(facadePanier).createCommandeFromPanier("123456","1","email@email.com");
+
+        // WHERE
+        MockHttpServletResponse response = mvc.perform(
+                post("/paniers/123456/valider_commande")
+                        .header("Authorization", "Bearer "+getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // WHEN
+        Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+
+    /**
+     * Si commande créée : CREATED
+     * @param mvc
+     * @param objectMapper
+     * @throws Exception
+     */
+    @Test
+    void testCreateCommandeOK(@Autowired MockMvc mvc, @Autowired ObjectMapper objectMapper) throws Exception {
+        // BEFORE
+        doNothing().when(facadePanier).createCommandeFromPanier("123456","1","email@email.com");
+
+        // WHERE
+        MockHttpServletResponse response = mvc.perform(
+                post("/paniers/123456/valider_commande")
+                        .header("Authorization", "Bearer "+getAccessToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        ).andReturn().getResponse();
+
+        // WHEN
+        Assertions.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
 
     // ===============================================================================================
     //                                   POST addProduit
