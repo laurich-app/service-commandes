@@ -10,7 +10,6 @@ import org.laurichapp.servicecommande.facades.FacadeCommande;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -30,7 +29,6 @@ public class CommandesController {
 
     /*========== GET ==========*/
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Paginate<CommandeDTO>> getAllCommandes(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "limit", defaultValue = "10", required = false) int limit,
@@ -50,7 +48,6 @@ public class CommandesController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CommandeDTO> getCommande(@PathVariable String id, Principal principal) {
         try {
             CommandeDTO commande = facadeCommande.getCommandeDTOUtilisateurById(id, principal.getName());
